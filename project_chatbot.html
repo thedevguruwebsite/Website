@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dev Guru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 3px 8px rgba(0,0,0,0.4);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .chat-container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 22px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .chat-messages {
+            padding: 25px;
+            height: 500px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 18px 22px;
+            border-radius: 18px;
+            line-height: 1.6;
+            position: relative;
+            animation: fadeIn 0.4s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background: #ffffff;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            border: 1px solid #e9ecef;
+        }
+
+        .user-message {
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 16px 24px;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            outline: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: #1a2a6c;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+        }
+
+        .chat-input button {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0 35px;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-input button:hover {
+            background: linear-gradient(to right, #b21f1f, #1a2a6c);
+            transform: scale(1.05);
+        }
+
+        .github-link {
+            display: block;
+            background: #333;
+            color: white;
+            padding: 14px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(51, 51, 51, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(51, 51, 51, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(51, 51, 51, 0); }
+        }
+
+        .github-link:hover {
+            background: #444;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .github-link i {
+            margin-right: 10px;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .suggestion-btn {
+            background: #e9ecef;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .suggestion-btn:hover {
+            background: #d1d7dc;
+            transform: translateY(-3px);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 7px 20px rgba(0,0,0,0.12);
+            transition: all 0.4s ease;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        }
+
+        .project-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .project-card h4 i {
+            color: #b21f1f;
+            font-size: 1.6rem;
+        }
+
+        .project-card p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            flex-grow: 1;
+        }
+
+        .project-card .btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-top: auto;
+        }
+
+        .project-card .btn:hover {
+            background: linear-gradient(to right, #b21f1f, #1a2a6c);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0 20px;
+        }
+
+        .tech-tag {
+            background: #e9ecef;
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .project-details {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        .project-details h4 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .project-details h4 i {
+            color: #b21f1f;
+        }
+
+        .project-details p {
+            line-height: 1.7;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+        }
+
+        .project-details ul {
+            padding-left: 25px;
+            margin-bottom: 25px;
+        }
+
+        .project-details li {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .repo-btn {
+            background: linear-gradient(to right, #1a2a6c, #3a5fc5);
+            color: white;
+        }
+
+        .view-btn {
+            background: linear-gradient(to right, #28a745, #218838);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .repo-btn:hover {
+            background: linear-gradient(to right, #b21f1f, #1a2a6c);
+        }
+
+        .view-btn:hover {
+            background: linear-gradient(to right, #218838, #28a745);
+        }
+
+        .repo-response {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .repo-response h4 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a2a6c;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .projects-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+        
+        .tab-btn.active {
+            background: white;
+            color: #1a2a6c;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .project-preview {
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .project-preview img {
+            width: 100%;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .chat-messages {
+                height: 400px;
+                padding: 15px;
+            }
+            
+            .message {
+                max-width: 90%;
+                padding: 15px;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-input {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .chat-input button {
+                width: 100%;
+                padding: 16px;
+                margin-left: 0;
+            }
+            
+            .project-actions {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-robot"></i> The Dev Guru</h1>
+        <p>Explore The Dev Guru projects with this interactive assistant</p>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <i class="fas fa-code"></i> Project Assistant - Ask about any project
+                <a href="https://www.thedevguru.com/"><button class="suggestion-btn"><i class="fas fa-home"></i> Go To Home</button></a>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    <i class="fas fa-robot"></i> Hello! I'm your Project Assistant. You can ask about any project or repository. Try saying:
+                    <div class="suggestions">
+                        <button class="suggestion-btn" data-command="show-projects"><i class="fas fa-list"></i> Show Projects</button>
+                        <button class="suggestion-btn" data-command="nginx-deployer"><i class="fab fa-github"></i> Nginx Deployer</button>
+                        <button class="suggestion-btn" data-command="number-converter"><i class="fab fa-github"></i> Number Converter</button>
+                        <button class="suggestion-btn" data-command="subnet-calculator"><i class="fab fa-github"></i> Subnet Calculator</button>
+                    </div>
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Live Demos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Open Source</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type project name (e.g. 'Nginx deployer')" autocomplete="off">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            
+            // GitHub projects data - All 5 projects
+            const projects = [
+                {
+                    name: "Nginx Website Deployer",
+                    description: "A tool to automate the deployment of websites using Nginx as a reverse proxy.",
+                    githubUrl: "https://github.com/sethysatyajit/Nginx-Website-Deployer",
+                    technologies: ["Bash", "Nginx", "Linux", "Automation"],
+                    features: [
+                        "Automated website deployment process",
+                        "SSL certificate management",
+                        "Reverse proxy configuration",
+                        "Server security hardening"
+                    ],
+                    liveDemo: null
+                },
+                {
+                    name: "Number Converter",
+                    description: "A utility for converting numbers between different bases (binary, decimal, hexadecimal, etc).",
+                    githubUrl: "https://github.com/sethysatyajit/Number-Converter",
+                    technologies: ["JavaScript", "HTML5", "CSS3", "Algorithms"],
+                    features: [
+                        "Convert between binary, decimal, octal and hexadecimal",
+                        "Real-time conversion as you type",
+                        "Copy to clipboard functionality",
+                        "Responsive design for all devices"
+                    ],
+                    liveDemo: "https://sethysatyajit.github.io/Number-Converter/"
+                },
+                {
+                    name: "Subnet Calculator",
+                    description: "A tool for calculating subnet details such as network address, broadcast address, and more for IPv4 networks.",
+                    githubUrl: "https://github.com/sethysatyajit/Subnet-Calculator",
+                    technologies: ["JavaScript", "HTML5", "CSS3", "Networking"],
+                    features: [
+                        "Calculate subnet details from IP address and CIDR",
+                        "Display network address, broadcast address, subnet mask",
+                        "Show usable host range and number of hosts",
+                        "Responsive design for all devices"
+                    ],
+                    liveDemo: "https://sethysatyajit.github.io/Subnet-Calculator/"
+                },
+                {
+                    name: "Students Details Search Engine",
+                    description: "A search engine for student details, allowing filtering and searching of student records.",
+                    githubUrl: "https://github.com/sethysatyajit/Students-Details-Search-Engine",
+                    technologies: ["JavaScript", "HTML5", "CSS3", "Search Algorithms"],
+                    features: [
+                        "Search student records by name, ID, or other fields",
+                        "Filter and sort functionality",
+                        "Responsive design",
+                        "Local storage for data persistence"
+                    ],
+                    liveDemo: "https://sethysatyajit.github.io/Students-Details-Search-Engine/"
+                },
+                {
+                    name: "Shyama Main",
+                    description: "A web application for managing and visualizing data related to Shyama Prasad Mukherji Rurban Mission (SPMRM).",
+                    githubUrl: "https://github.com/rahulpatle1308/shyama-main.git",
+                    technologies: ["React", "Node.js", "Express", "MongoDB"],
+                    features: [
+                        "Data visualization using charts",
+                        "User authentication and authorization",
+                        "CRUD operations for data management",
+                        "Responsive dashboard design"
+                    ],
+                    liveDemo: "https://shyama-main-1.onrender.com/"
+                }
+            ];
+            
+            // Initial bot message
+            setTimeout(() => {
+                addBotMessage("You can ask me about any project. Try commands like:<br>'Show me the Nginx project' or 'Open Students Details Search Engine repo'");
+            }, 1000);
+            
+            // Send message on button click
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Suggestion buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('suggestion-btn')) {
+                    const command = e.target.dataset.command;
+                    if (command === 'show-projects') {
+                        showProjects();
+                    } else if (command === 'nginx-deployer') {
+                        showRepo('Nginx Website Deployer');
+                    } else if (command === 'number-converter') {
+                        showRepo('Number Converter');
+                    } else if (command === 'subnet-calculator') {
+                        showRepo('Subnet Calculator');
+                    } else if (command === 'students-search') {
+                        showRepo('Students Details Search Engine');
+                    }
+                }
+            });
+            
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    userInput.value = '';
+                    
+                    // Simulate bot thinking
+                    setTimeout(() => {
+                        processUserMessage(message);
+                    }, 800);
+                }
+            }
+            
+            function addUserMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', 'user-message');
+                messageDiv.innerHTML = `<i class="fas fa-user" style="margin-right: 8px;"></i> ${text}`;
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+            
+            function addBotMessage(text, isHTML = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', 'bot-message');
+                
+                if (isHTML) {
+                    messageDiv.innerHTML = `<i class="fas fa-robot" style="margin-right: 8px;"></i> ${text}`;
+                } else {
+                    messageDiv.innerHTML = `<i class="fas fa-robot" style="margin-right: 8px;"></i> ${text}`;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+            
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function processUserMessage(message) {
+                const lowerMsg = message.toLowerCase();
+                
+                if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+                    addBotMessage("Hello! I'm your Project Assistant. You can ask about any GitHub project or repository.");
+                }
+                else if (lowerMsg.includes('project') || lowerMsg.includes('show') || lowerMsg.includes('list')) {
+                    showProjects();
+                }
+                else if (lowerMsg.includes('github') || lowerMsg.includes('profile')) {
+                    showGitHubProfile();
+                }
+                else if (lowerMsg.includes('help')) {
+                    showHelp();
+                }
+                else {
+                    // Check if message contains a project name
+                    let foundProject = null;
+                    
+                    for (const project of projects) {
+                        const projectLower = project.name.toLowerCase();
+                        const repoKeywords = ['repo', 'repository', 'code', 'github', 'link', 'source'];
+                        
+                        // Check if message contains project name and a repo keyword
+                        if (lowerMsg.includes(projectLower) && 
+                            repoKeywords.some(keyword => lowerMsg.includes(keyword))) {
+                            foundProject = project;
+                            break;
+                        }
+                        
+                        // Check if message is just the project name
+                        if (lowerMsg === projectLower) {
+                            foundProject = project;
+                            break;
+                        }
+                    }
+                    
+                    if (foundProject) {
+                        showRepo(foundProject.name);
+                    } else {
+                        // Try to find the closest project match
+                        const closestProject = findClosestProject(lowerMsg);
+                        if (closestProject) {
+                            addBotMessage(`Did you mean ${closestProject.name}? Here's its repository:`);
+                            showRepo(closestProject.name);
+                        } else {
+                            addBotMessage("I'm not sure which project you're referring to. Here are all my projects:");
+                            showProjects();
+                        }
+                    }
+                }
+            }
+            
+            function findClosestProject(input) {
+                // Simple approach to find closest project name
+                for (const project of projects) {
+                    const projectLower = project.name.toLowerCase();
+                    if (projectLower.includes(input) || input.includes(projectLower)) {
+                        return project;
+                    }
+                }
+                return null;
+            }
+            
+            function showProjects() {
+                let html = `<h4><i class="fas fa-folder-open"></i> My Projects</h4>
+                            <p>Click any project to get its repository:</p>
+                            <div class="projects-grid">`;
+                
+                projects.forEach(project => {
+                    html += `
+                    <div class="project-card" onclick="document.querySelector('.chat-input input').value='${project.name} repo'; document.getElementById('send-btn').click()">
+                        <h4><i class="fas fa-project-diagram"></i> ${project.name}</h4>
+                        <p>${project.description}</p>
+                        <div class="tech-list">
+                            ${project.technologies.map(tech => 
+                                `<span class="tech-tag">${tech}</span>`
+                            ).join('')}
+                        </div>
+                        <div class="btn">
+                            <i class="fab fa-github"></i> Get Repository
+                        </div>
+                    </div>
+                    `;
+                });
+                
+                html += `</div>`;
+                addBotMessage(html, true);
+            }
+            
+            function showRepo(projectName) {
+                const project = projects.find(p => p.name === projectName);
+                
+                if (!project) {
+                    addBotMessage(`Sorry, I couldn't find the "${projectName}" project. Here are all my projects:`);
+                    showProjects();
+                    return;
+                }
+                
+                const liveDemoHtml = project.liveDemo ? 
+                    `<a href="${project.liveDemo}" target="_blank" class="action-btn view-btn">
+                        <i class="fas fa-external-link-alt"></i> View Live Demo
+                    </a>` : 
+                    `<div class="action-btn" style="background:#6c757d; cursor:not-allowed;">
+                        <i class="fas fa-exclamation-circle"></i> No Live Demo
+                    </div>`;
+                
+                const html = `
+                <div class="repo-response">
+                    <h4><i class="fab fa-github"></i> ${project.name} Repository</h4>
+                    <p>${project.description}</p>
+                    
+                    <a href="${project.githubUrl}" target="_blank" class="github-link">
+                        <i class="fab fa-github"></i> Open ${project.name} Repository
+                    </a>
+                    
+                    <p style="margin-top: 20px;"><strong>Key Features:</strong></p>
+                    <ul>
+                        ${project.features.map(feature => 
+                            `<li>${feature}</li>`
+                        ).join('')}
+                    </ul>
+                    
+                    <div class="project-actions">
+                        <a href="${project.githubUrl}" target="_blank" class="action-btn repo-btn">
+                            <i class="fab fa-github"></i> Open Repository
+                        </a>
+                        ${liveDemoHtml}
+                    </div>
+                </div>
+                `;
+                
+                addBotMessage(html, true);
+            }
+            
+            function showGitHubProfile() {
+                const html = `
+                <div class="project-details">
+                    <h4><i class="fab fa-github"></i> GitHub Profile</h4>
+                    <p>You can explore all my repositories on GitHub:</p>
+                    <a href="https://github.com/sethysatyajit" target="_blank" class="github-link">
+                        <i class="fab fa-github"></i> Visit sethysatyajit on GitHub
+                    </a>
+                    <p style="margin-top: 20px;">My repositories include:</p>
+                    <ul>
+                        <li>Nginx Website Deployer</li>
+                        <li>Number Converter</li>
+                        <li>Subnet Calculator</li>
+                        <li>Students Details Search Engine</li>
+                        <li>Shyama Main (Collaborative project)</li>
+                    </ul>
+                </div>
+                `;
+                addBotMessage(html, true);
+            }
+            
+            function showHelp() {
+                const html = `
+                <div class="project-details">
+                    <h4><i class="fas fa-question-circle"></i> How to Use This Assistant</h4>
+                    <p>This chatbot helps you explore my GitHub projects. Here's how you can interact:</p>
+                    
+                    <p><strong>Available Commands:</strong></p>
+                    <ul>
+                        <li><strong>"Show projects"</strong> - View all available GitHub projects</li>
+                        <li><strong>"Tell me about [project]"</strong> - Get details about a specific project</li>
+                        <li><strong>"Open [project] repo"</strong> - Open the repository for a project</li>
+                        <li><strong>"GitHub"</strong> - Get a link to my GitHub profile</li>
+                        <li><strong>"Help"</strong> - Show this help information</li>
+                    </ul>
+                    
+                    <p><strong>Examples:</strong></p>
+                    <ul>
+                        <li>"Show me the Nginx project"</li>
+                        <li>"Open Number Converter repo"</li>
+                        <li>"Tell me about Subnet Calculator"</li>
+                        <li>"What is Students Details Search Engine?"</li>
+                    </ul>
+                </div>
+                `;
+                addBotMessage(html, true);
+            }
+        });
+    </script>
+</body>
+</html>
