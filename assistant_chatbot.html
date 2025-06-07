@@ -1,0 +1,952 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dev Guru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a5298, #3a7bd5);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-header {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            padding: 25px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .header-text {
+            flex: 1;
+        }
+        
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        
+        .chat-history {
+            flex: 1;
+            padding: 25px 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background: #f0f5ff;
+            color: #333;
+            border: 1px solid #dde7ff;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: #4a00e0;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .input-area {
+            padding: 20px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .message-input:focus {
+            border-color: #8e2de2;
+            box-shadow: 0 0 0 4px rgba(138, 45, 226, 0.15);
+        }
+        
+        .send-btn {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(138, 45, 226, 0.3);
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 7px 20px rgba(138, 45, 226, 0.4);
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .option-btn {
+            background: #e6e9ff;
+            color: #4a00e0;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .option-btn:hover {
+            background: #4a00e0;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .option-btn:disabled {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-self: flex-start;
+            padding: 15px 20px;
+            background: #f0f5ff;
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: #8e2de2;
+            border-radius: 50%;
+            margin: 0 4px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+        
+        .feature-badge {
+            display: inline-block;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(138, 45, 226, 0.25);
+        }
+        
+        /* Decorative elements */
+        .decoration {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.1;
+        }
+        
+        .dec-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 120px;
+            color: #4a00e0;
+        }
+        
+        .dec-2 {
+            bottom: 10%;
+            right: 5%;
+            font-size: 100px;
+            color: #8e2de2;
+            transform: rotate(45deg);
+        }
+        
+        /* Status messages */
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Scrollbar styling */
+        .chat-history::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-history::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .chat-history::-webkit-scrollbar-thumb {
+            background: #8e2de2;
+            border-radius: 10px;
+        }
+        
+        .chat-history::-webkit-scrollbar-thumb:hover {
+            background: #4a00e0;
+        }
+        
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 95vh;
+                border-radius: 20px;
+            }
+            
+            .chat-header {
+                padding: 20px 15px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .header-text h1 {
+                font-size: 20px;
+            }
+        }
+        
+        /* Mobile number input specific styles */
+        .mobile-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        /* Progress indicator */
+        .progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Mobile input container */
+        .mobile-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .mobile-format-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .format-example {
+            background: #e6e9ff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #4a00e0;
+        }
+        
+        .mobile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .skip-btn {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .skip-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .submit-btn {
+            background: #4a00e0;
+            color: white;
+            box-shadow: 0 3px 8px rgba(74, 0, 224, 0.3);
+        }
+        
+        .submit-btn:hover {
+            background: #3a00b0;
+        }
+        
+        .submit-btn:disabled {
+            background: #b0b0b0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden form for Web3Forms submission -->
+    <form id="order-form" style="display: none;">
+        <input type="hidden" name="access_key" value="d6a0a92a-172e-4b0e-8af5-18bba1a4c1ee">
+        <input type="hidden" name="name" id="form-name">
+        <input type="hidden" name="email" id="form-email">
+        <input type="hidden" name="mobile" id="form-mobile">
+        <input type="hidden" name="service" id="form-service">
+        <input type="hidden" name="project" id="form-project">
+        <input type="hidden" name="timeline" id="form-timeline">
+        <input type="hidden" name="subject" value="New Project Inquiry from DevGuru Assistant">
+    </form>
+
+    <div class="chat-container">
+        <div class="decoration dec-1">
+            <i class="fas fa-code"></i>
+        </div>
+        <div class="decoration dec-2">
+            <i class="fas fa-laptop-code"></i>
+        </div>
+        
+        <div class="chat-header">
+            <div class="logo-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="header-text">
+                <h1>The Dev Guru Assistant</h1>
+                <p>Your Web Development Expert</p>
+            </div>
+            <div class="status">
+                <i class="fas fa-circle" style="color: #4ade80;"></i> Online
+            </div>
+        </div>
+        
+        <!-- Progress bar -->
+        <div class="progress-bar">
+            <div class="progress" id="progressBar" style="width: 0%"></div>
+        </div>
+        
+        <div class="chat-history" id="chatHistory">
+            <div class="message bot-message">
+                <span class="feature-badge">The Dev Guru Assistant</span>
+                <p>Hello! I'm your DevGuru assistant. 👋 Let's find the perfect web solution for your business!</p>
+            </div>
+            <div class="message bot-message">
+                <p>Could you tell me what type of website you need?</p>
+                <div class="options">
+                    <a href="https://www.thedevguru.com/"><button class="option-btn">Go To Home</button></a>
+                    <button class="option-btn" data-value="static">Static Website</button>
+                    <button class="option-btn" data-value="dynamic">Dynamic Website</button>
+                    <button class="option-btn" data-value="wordpress">WordPress</button>
+                    <button class="option-btn" data-value="deployment">Deployment</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" class="message-input" id="messageInput" placeholder="Type your message here...">
+            <button class="send-btn" id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatHistory = document.getElementById('chatHistory');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const orderForm = document.getElementById('order-form');
+        const progressBar = document.getElementById('progressBar');
+        
+        // User information object
+        const userInfo = {
+            name: '',
+            email: '',
+            mobile: '',
+            serviceType: '',
+            projectDesc: '',
+            timeline: ''
+        };
+        
+        // Conversation flow state
+        let conversationState = 'serviceType';
+        
+        // Progress tracking
+        const progressStages = {
+            'serviceType': 0,
+            'projectDesc': 20,
+            'name': 40,
+            'email': 60,
+            'mobile': 80,
+            'timeline': 100
+        };
+        
+        // Update progress bar
+        function updateProgressBar() {
+            progressBar.style.width = `${progressStages[conversationState] || 0}%`;
+        }
+        
+        // Send message on button click
+        sendBtn.addEventListener('click', sendMessage);
+        
+        // Send message on Enter key
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Handle option button clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('option-btn')) {
+                const value = e.target.getAttribute('data-value');
+                handleOptionSelection(value, e.target.textContent);
+            }
+        });
+        
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Disable input while processing
+            disableInput();
+            
+            // Process user response based on conversation state
+            processUserResponse(message);
+        }
+        
+        function addMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(sender === 'bot' ? 'bot-message' : 'user-message');
+            messageElement.innerHTML = text;
+            chatHistory.appendChild(messageElement);
+            
+            // Scroll to bottom
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+        
+        function addBotMessage(text) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'bot-message');
+            messageElement.innerHTML = text;
+            chatHistory.appendChild(messageElement);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            // Remove any existing typing indicators
+            removeTypingIndicator();
+            
+            const typingElement = document.createElement('div');
+            typingElement.classList.add('typing-indicator');
+            typingElement.id = 'typingIndicator';
+            typingElement.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatHistory.appendChild(typingElement);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const typingElement = document.getElementById('typingIndicator');
+            if (typingElement) {
+                typingElement.remove();
+            }
+        }
+        
+        function disableInput() {
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true;
+            });
+        }
+        
+        function enableInput() {
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = false;
+            });
+            messageInput.focus();
+        }
+        
+        function handleOptionSelection(value, text) {
+            // Add user selection as a message
+            addMessage(text, 'user');
+            
+            // Disable input while processing
+            disableInput();
+            
+            // Process the selection
+            processUserResponse(value);
+        }
+        
+        function processUserResponse(response) {
+            // Show typing indicator
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                removeTypingIndicator();
+                
+                switch(conversationState) {
+                    case 'serviceType':
+                        userInfo.serviceType = response;
+                        updateProgressBar();
+                        askForProjectDescription();
+                        break;
+                        
+                    case 'projectDesc':
+                        userInfo.projectDesc = response;
+                        updateProgressBar();
+                        askForName();
+                        break;
+                        
+                    case 'name':
+                        userInfo.name = response;
+                        updateProgressBar();
+                        askForEmail();
+                        break;
+                        
+                    case 'email':
+                        userInfo.email = response;
+                        updateProgressBar();
+                        askForMobile();
+                        break;
+                        
+                    case 'mobile':
+                        // Validate mobile format
+                        if (response && response.toLowerCase() !== 'skip' && !validateMobile(response)) {
+                            addBotMessage(`
+                                <div class="status-message error">
+                                    <i class="fas fa-exclamation-triangle"></i> 
+                                    Please enter a valid mobile number or click the Skip button
+                                </div>
+                            `);
+                            enableInput(); // Re-enable input for correction
+                            return; // Exit without changing state
+                        }
+                        userInfo.mobile = response.toLowerCase() === 'skip' ? '' : response;
+                        updateProgressBar();
+                        askForTimeline();
+                        break;
+                        
+                    case 'timeline':
+                        userInfo.timeline = response;
+                        updateProgressBar();
+                        showSummaryAndRecommendation();
+                        break;
+                        
+                    case 'complete':
+                        if (response === 'restart') {
+                            restartConversation();
+                        } else if (response === 'contact') {
+                            addBotMessage("You can contact our support team at thedevguru2@gmail.com or <a href='https://www.instagram.com/thedevguruofficial/' target='_blank'>Instagram</a>");
+                            enableInput();
+                        } else if (response === 'portfolio') {
+                            addBotMessage("Check out our Website at <a href='https://www.thedevguru.com/' target='_blank'>www.thedevguru.com</a>");
+                            enableInput();
+                        }
+                        break;
+                }
+                
+                // Re-enable input after processing
+                if (conversationState !== 'mobile') {
+                    enableInput();
+                }
+            }, 1000);
+        }
+        
+        function validateMobile(mobile) {
+            // More flexible regex for mobile numbers
+            const regex = /^(\+\d{1,3}[- ]?)?(\(\d{1,3}\)|\d{1,3})[- ]?\d{3,4}[- ]?\d{3,4}$/;
+            return regex.test(mobile);
+        }
+        
+        function askForProjectDescription() {
+            conversationState = 'projectDesc';
+            
+            let message = "Great choice! Could you describe your project in a few words?";
+            
+            if (userInfo.serviceType === 'static') {
+                message = "Excellent! Static websites are perfect for showcasing your business. Could you tell me more about what you want to achieve?";
+            } else if (userInfo.serviceType === 'dynamic') {
+                message = "Dynamic websites are great for interactive experiences! What kind of functionality do you need?";
+            } else if (userInfo.serviceType === 'wordpress') {
+                message = "WordPress is a powerful CMS! What type of content will you be managing?";
+            } else if (userInfo.serviceType === 'deployment') {
+                message = "Deployment services will get your site live smoothly! Are you launching a new site or migrating an existing one?";
+            }
+            
+            addBotMessage(message);
+        }
+        
+        function askForName() {
+            conversationState = 'name';
+            addBotMessage("Thanks for that information! What's your name?");
+        }
+        
+        function askForEmail() {
+            conversationState = 'email';
+            addBotMessage(`Nice to meet you, ${userInfo.name}! What's the best email to contact you?`);
+        }
+        
+        function askForMobile() {
+            conversationState = 'mobile';
+            addBotMessage(`
+                <p>Please share your mobile number so we can contact you faster:</p>
+                <div class="mobile-input-container">
+                    <div class="mobile-format-examples">
+                        <div class="format-example">123-456-7890</div>
+                        <div class="format-example">+1 (123) 456-7890</div>
+                        <div class="format-example">+44 20 7123 4567</div>
+                    </div>
+                    <div class="mobile-actions">
+                        <button class="action-btn skip-btn" id="skipMobileBtn">Skip</button>
+                        <button class="action-btn submit-btn" id="submitMobileBtn" disabled>Submit</button>
+                    </div>
+                </div>
+            `);
+            
+            // Add event listeners for mobile input buttons
+            document.getElementById('skipMobileBtn').addEventListener('click', () => {
+                handleOptionSelection('skip', 'Skip');
+            });
+            
+            const mobileInput = document.createElement('input');
+            mobileInput.type = 'text';
+            mobileInput.classList.add('message-input');
+            mobileInput.placeholder = 'Enter your mobile number...';
+            mobileInput.id = 'mobileInput';
+            mobileInput.style.marginTop = '10px';
+            
+            // Insert before the actions container
+            const container = document.querySelector('.mobile-input-container');
+            container.insertBefore(mobileInput, container.querySelector('.mobile-actions'));
+            
+            // Add input validation to mobile input
+            mobileInput.addEventListener('input', function() {
+                const isValid = validateMobile(this.value);
+                document.getElementById('submitMobileBtn').disabled = !isValid && this.value !== '';
+                
+                // Add visual feedback
+                if (this.value === '') {
+                    this.style.borderColor = '#e0e0e0';
+                } else if (isValid) {
+                    this.style.borderColor = '#4ade80';
+                } else {
+                    this.style.borderColor = '#ff6b6b';
+                }
+            });
+            
+            // Submit button for mobile
+            document.getElementById('submitMobileBtn').addEventListener('click', () => {
+                if (validateMobile(mobileInput.value)) {
+                    handleOptionSelection(mobileInput.value, mobileInput.value);
+                }
+            });
+            
+            // Allow pressing Enter to submit
+            mobileInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && validateMobile(this.value)) {
+                    handleOptionSelection(this.value, this.value);
+                }
+            });
+            
+            // Focus on mobile input
+            setTimeout(() => {
+                mobileInput.focus();
+            }, 100);
+        }
+        
+        function askForTimeline() {
+            conversationState = 'timeline';
+            addBotMessage("Almost done! What's your timeline for this project?");
+            addBotMessage(`
+                <div class="options">
+                    <button class="option-btn" data-value="ASAP">ASAP</button>
+                    <button class="option-btn" data-value="1-2 weeks">1-2 weeks</button>
+                    <button class="option-btn" data-value="1 month">1 month</button>
+                    <button class="option-btn" data-value="2+ months">2+ months</button>
+                </div>
+            `);
+        }
+        
+        function showSummaryAndRecommendation() {
+            conversationState = 'complete';
+            
+            let recommendation = "";
+            let serviceName = "";
+            
+            if (userInfo.serviceType === 'static') {
+                serviceName = "Static Website";
+                recommendation = "Based on your needs, our <strong>Static Website</strong> service is perfect for you. We'll create a professional, fast-loading website that showcases your business effectively.";
+            } else if (userInfo.serviceType === 'dynamic') {
+                serviceName = "Dynamic Website";
+                recommendation = "For your requirements, our <strong>Dynamic Website</strong> service is the best fit. We'll build an interactive site with database functionality tailored to your business needs.";
+            } else if (userInfo.serviceType === 'wordpress') {
+                serviceName = "WordPress Development";
+                recommendation = "Our <strong>WordPress Development</strong> service will be ideal for you. We'll create a custom WordPress site with an easy-to-use content management system.";
+            } else if (userInfo.serviceType === 'deployment') {
+                serviceName = "Website Deployment";
+                recommendation = "Our <strong>Website Deployment</strong> service will get your website live and running smoothly. We'll handle all server setup and configuration.";
+            }
+            
+            // Format mobile for display
+            const mobileDisplay = userInfo.mobile ? userInfo.mobile : "Not provided";
+            
+            const summary = `
+                <span class="feature-badge">Project Summary</span>
+                <div style="margin: 15px 0;">
+                    <strong>Here's what we have:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Name:</strong> ${userInfo.name}</li>
+                        <li><strong>Email:</strong> ${userInfo.email}</li>
+                        <li><strong>Mobile:</strong> ${mobileDisplay}</li>
+                        <li><strong>Service:</strong> ${serviceName}</li>
+                        <li><strong>Project:</strong> ${userInfo.projectDesc}</li>
+                        <li><strong>Timeline:</strong> ${userInfo.timeline}</li>
+                    </ul>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    ${recommendation}
+                </div>
+                <p>One of our experts will contact you at <strong>${userInfo.email}</strong> within 24 hours to discuss your project!</p>
+            `;
+            
+            addBotMessage(summary);
+            
+            // Submit form data to Web3Forms API
+            submitFormData(userInfo, serviceName);
+            
+            // Add final message
+            setTimeout(() => {
+                addBotMessage(`
+                    <p>Thank you for choosing DevGuru! Is there anything else I can help you with?</p>
+                    <div class="options">
+                        <button class="option-btn" data-value="restart">Start New Project</button>
+                        <button class="option-btn" data-value="contact">Contact Support</button>
+                        <button class="option-btn" data-value="portfolio">View Portfolio</button>
+                    </div>
+                `);
+                enableInput();
+            }, 500);
+        }
+        
+        function submitFormData(userData, serviceName) {
+            // Set form values
+            document.getElementById('form-name').value = userData.name;
+            document.getElementById('form-email').value = userData.email;
+            document.getElementById('form-mobile').value = userData.mobile;
+            document.getElementById('form-service').value = serviceName;
+            document.getElementById('form-project').value = userData.projectDesc;
+            document.getElementById('form-timeline').value = userData.timeline;
+            
+            // Create form data object
+            const formData = new FormData(orderForm);
+            
+            // Submit to Web3Forms API
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addBotMessage(`
+                        <div class="status-message success">
+                            <i class="fas fa-check-circle"></i> 
+                            Your project details have been successfully submitted!
+                        </div>
+                    `);
+                } else {
+                    addBotMessage(`
+                        <div class="status-message error">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            There was an issue submitting your details. Please try again later.
+                        </div>
+                    `);
+                }
+            })
+            .catch(error => {
+                addBotMessage(`
+                    <div class="status-message error">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Connection error: ${error.message}
+                    </div>
+                `);
+            });
+        }
+        
+        function restartConversation() {
+            // Reset user info
+            userInfo.name = '';
+            userInfo.email = '';
+            userInfo.mobile = '';
+            userInfo.serviceType = '';
+            userInfo.projectDesc = '';
+            userInfo.timeline = '';
+            
+            conversationState = 'serviceType';
+            progressBar.style.width = '0%';
+            
+            // Clear chat history except initial messages
+            const initialMessages = document.querySelectorAll('.message');
+            initialMessages.forEach((msg, index) => {
+                if (index > 1) msg.remove();
+            });
+            
+            addBotMessage(`
+                <p>Great! Let's start a new project.</p>
+                <p>What type of website do you need?</p>
+                <div class="options">
+                    <button class="option-btn" data-value="static">Static Website</button>
+                    <button class="option-btn" data-value="dynamic">Dynamic Website</button>
+                    <button class="option-btn" data-value="wordpress">WordPress</button>
+                    <button class="option-btn" data-value="deployment">Deployment</button>
+                </div>
+            `);
+        }
+        
+        // Add initial bot message after a delay
+        setTimeout(() => {
+            addBotMessage("You can also describe your project and I'll recommend the best service for you!");
+        }, 3000);
+    </script>
+</body>
+</html>
