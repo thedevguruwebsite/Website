@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://raw.githubusercontent.com/thedevguruwebsite/Website/refs/heads/main/img/logo.png">
+    <title>Python Learning Adventure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(to right, #457fca, #5691c8);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: #ffd43b;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 25px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .module {
+            padding: 15px 25px;
+            border-left: 5px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .module:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .module.active {
+            border-left: 5px solid #ffd43b;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .module i {
+            font-size: 20px;
+            color: #3498db;
+        }
+        
+        .module h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .module-progress {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .module-title {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .module-description {
+            color: #34495e;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .challenge-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .challenge-title {
+            font-size: 24px;
+            color: #3498db;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .challenge-description {
+            color: #2c3e50;
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .code-editor {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .code-content {
+            color: #d4d4d4;
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: #e3f2fd;
+            border: 2px solid #bbdefb;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .option:hover {
+            background: #bbdefb;
+            transform: translateY(-3px);
+        }
+        
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #a5d6a7;
+        }
+        
+        .option.incorrect {
+            background: #ffcdd2;
+            border-color: #ef9a9a;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+        
+        .btn-secondary:hover {
+            background: #dfe6e9;
+        }
+        
+        .progress-container {
+            margin-top: auto;
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-main {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-main {
+            height: 100%;
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            border: 2px solid #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            border: 2px solid #ffcdd2;
+            color: #c62828;
+        }
+        
+        .feedback-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feedback-content {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .level-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .level {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .level.locked {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        .level.unlocked {
+            background: #81c784;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .level.current {
+            background: #ffd54f;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 213, 79, 0.7);
+        }
+        
+        .level.completed {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .level-select-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 20px 0 15px;
+        }
+        
+        .victory-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+        
+        .victory-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .trophy {
+            font-size: 100px;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat-box {
+                min-width: 80px;
+                padding: 6px 10px;
+            }
+            
+            .level {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <div class="logo">
+                <i class="fab fa-python"></i>
+                <h1>Python Learning Adventure</h1>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="currentLevel">1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">XP</div>
+                    <div class="stat-value" id="xpValue">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="scoreValue">0</div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="sidebar">
+                <div class="module active" data-module="basics">
+                    <i class="fas fa-vial"></i>
+                    <div>
+                        <h3>Python Basics</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="basics-progress" style="width: 20%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="control">
+                    <i class="fas fa-code"></i>
+                    <div>
+                        <h3>Control Structures</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="control-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="functions">
+                    <i class="fas fa-function"></i>
+                    <div>
+                        <h3>Functions</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="functions-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="data">
+                    <i class="fas fa-list"></i>
+                    <div>
+                        <h3>Data Structures</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="data-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="oop">
+                    <i class="fas fa-cube"></i>
+                    <div>
+                        <h3>OOP Concepts</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="oop-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <h2 class="module-title" id="moduleTitle">Python Basics</h2>
+                <p class="module-description" id="moduleDescription">
+                    Learn the fundamental building blocks of Python programming including variables, data types, and basic operations.
+                </p>
+                
+                <div class="level-select-title">Select Level</div>
+                <div class="level-container" id="levelContainer">
+                    <!-- Levels will be dynamically generated -->
+                </div>
+                
+                <div id="quizContainer">
+                    <!-- Quiz content will be dynamically generated -->
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Course Progress</span>
+                        <span id="progressPercentage">5% Complete</span>
+                    </div>
+                    <div class="progress-bar-main">
+                        <div class="progress-main" id="mainProgress" style="width: 5%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="victory-screen" id="victoryScreen">
+                <div class="victory-content">
+                    <div class="trophy">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h1>Congratulations!</h1>
+                    <p class="module-description">You've completed all 30 levels of the Python Learning Adventure!</p>
+                    <p class="stat-value" style="font-size: 32px; margin: 20px 0;">Final Score: <span id="finalScore">0</span></p>
+                    <button class="btn btn-primary" id="restartGameBtn">
+                        <i class="fas fa-redo"></i> Play Again
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game state
+            const gameState = {
+                currentLevel: 1,
+                maxLevel: 30,
+                score: 0,
+                xp: 0,
+                currentModule: 'basics',
+                completedLevels: new Set(),
+                levels: []
+            };
+            
+            // DOM elements
+            const levelContainer = document.getElementById('levelContainer');
+            const quizContainer = document.getElementById('quizContainer');
+            const moduleTitle = document.getElementById('moduleTitle');
+            const moduleDescription = document.getElementById('moduleDescription');
+            const currentLevelElement = document.getElementById('currentLevel');
+            const xpValueElement = document.getElementById('xpValue');
+            const scoreValueElement = document.getElementById('scoreValue');
+            const mainProgress = document.getElementById('mainProgress');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const victoryScreen = document.getElementById('victoryScreen');
+            const finalScore = document.getElementById('finalScore');
+            const restartGameBtn = document.getElementById('restartGameBtn');
+            
+            // Questions database
+            const questions = [
+                // Level 1-5: Python Basics
+                {
+                    level: 1,
+                    module: 'basics',
+                    question: "How do you print 'Hello, World!' in Python?",
+                    options: [
+                        "print('Hello, World!')",
+                        "console.log('Hello, World!')",
+                        "echo 'Hello, World!'",
+                        "System.out.println('Hello, World!')"
+                    ],
+                    answer: 0,
+                    explanation: "In Python, the print() function is used to output text to the console."
+                },
+                {
+                    level: 2,
+                    module: 'basics',
+                    question: "Which of the following is a valid variable name?",
+                    options: [
+                        "my-variable",
+                        "123variable",
+                        "_my_variable",
+                        "global"
+                    ],
+                    answer: 2,
+                    explanation: "Variable names can contain letters, numbers, and underscores, but cannot start with a number or contain hyphens."
+                },
+                {
+                    level: 3,
+                    module: 'basics',
+                    question: "What is the output of: print(3 * 'abc')",
+                    options: [
+                        "abcabcabc",
+                        "3abc",
+                        "abc3",
+                        "Error"
+                    ],
+                    answer: 0,
+                    explanation: "Multiplying a string by an integer repeats the string that many times."
+                },
+                {
+                    level: 4,
+                    module: 'basics',
+                    question: "Which operator is used for exponentiation?",
+                    options: [
+                        "**",
+                        "^",
+                        "^^",
+                        "exp"
+                    ],
+                    answer: 0,
+                    explanation: "The double asterisk ** is used for exponentiation in Python (e.g., 2**3 = 8)."
+                },
+                {
+                    level: 5,
+                    module: 'basics',
+                    question: "What function is used to get user input?",
+                    options: [
+                        "input()",
+                        "get_input()",
+                        "read()",
+                        "scan()"
+                    ],
+                    answer: 0,
+                    explanation: "The input() function allows the user to enter data which can be stored in a variable."
+                },
+                
+                // Level 6-10: Control Structures
+                {
+                    level: 6,
+                    module: 'control',
+                    question: "What is the correct syntax for an if statement?",
+                    options: [
+                        "if x > 5:",
+                        "if (x > 5)",
+                        "if x > 5 then",
+                        "if [x > 5]"
+                    ],
+                    answer: 0,
+                    explanation: "Python uses colons and indentation to define code blocks, not parentheses or then keywords."
+                },
+                {
+                    level: 7,
+                    module: 'control',
+                    question: "Which loop is used to iterate over a sequence?",
+                    options: [
+                        "for loop",
+                        "while loop",
+                        "do-while loop",
+                        "repeat loop"
+                    ],
+                    answer: 0,
+                    explanation: "The for loop is specifically designed to iterate over sequences (lists, tuples, strings, etc.)."
+                },
+                {
+                    level: 8,
+                    module: 'control',
+                    question: "How do you write a comment in Python?",
+                    options: [
+                        "// This is a comment",
+                        "/* This is a comment */",
+                        "# This is a comment",
+                        "-- This is a comment"
+                    ],
+                    answer: 2,
+                    explanation: "Python uses the hash symbol # for single-line comments."
+                },
+                {
+                    level: 9,
+                    module: 'control',
+                    question: "What does the range(5) function return?",
+                    options: [
+                        "[0, 1, 2, 3, 4]",
+                        "[1, 2, 3, 4, 5]",
+                        "[0, 1, 2, 3, 4, 5]",
+                        "[5]"
+                    ],
+                    answer: 0,
+                    explanation: "range(5) generates numbers from 0 to 4 (5 is exclusive)."
+                },
+                {
+                    level: 10,
+                    module: 'control',
+                    question: "Which keyword is used to break out of a loop?",
+                    options: [
+                        "break",
+                        "exit",
+                        "stop",
+                        "continue"
+                    ],
+                    answer: 0,
+                    explanation: "The break statement exits the loop immediately, while continue skips to the next iteration."
+                },
+                
+                // Level 11-15: Functions
+                {
+                    level: 11,
+                    module: 'functions',
+                    question: "How do you define a function in Python?",
+                    options: [
+                        "function my_func():",
+                        "def my_func():",
+                        "define my_func():",
+                        "func my_func():"
+                    ],
+                    answer: 1,
+                    explanation: "Functions are defined using the def keyword in Python."
+                },
+                {
+                    level: 12,
+                    module: 'functions',
+                    question: "What is the purpose of the return statement?",
+                    options: [
+                        "To print a value to the console",
+                        "To exit the program",
+                        "To pass a value back to the caller",
+                        "To indicate the end of a function"
+                    ],
+                    answer: 2,
+                    explanation: "The return statement sends a value back to the code that called the function."
+                },
+                {
+                    level: 13,
+                    module: 'functions',
+                    question: "What is a lambda function?",
+                    options: [
+                        "A function that calls itself",
+                        "A large function with many parameters",
+                        "A small anonymous function",
+                        "A function that never returns"
+                    ],
+                    answer: 2,
+                    explanation: "Lambda functions are small, anonymous functions defined with the lambda keyword."
+                },
+                {
+                    level: 14,
+                    module: 'functions',
+                    question: "What does *args in a function definition do?",
+                    options: [
+                        "Forces all arguments to be keyword arguments",
+                        "Allows passing a variable number of arguments",
+                        "Indicates that the function returns a value",
+                        "Specifies the function is asynchronous"
+                    ],
+                    answer: 1,
+                    explanation: "*args allows a function to accept any number of positional arguments."
+                },
+                {
+                    level: 15,
+                    module: 'functions',
+                    question: "Which of these is a built-in function?",
+                    options: [
+                        "print()",
+                        "input()",
+                        "len()",
+                        "All of the above"
+                    ],
+                    answer: 3,
+                    explanation: "Python has many built-in functions that are always available, including print(), input(), and len()."
+                },
+                
+                // Level 16-20: Data Structures
+                {
+                    level: 16,
+                    module: 'data',
+                    question: "Which data structure is ordered and changeable?",
+                    options: [
+                        "Set",
+                        "Dictionary",
+                        "List",
+                        "Tuple"
+                    ],
+                    answer: 2,
+                    explanation: "Lists are ordered, mutable sequences that can contain elements of different types."
+                },
+                {
+                    level: 17,
+                    module: 'data',
+                    question: "How do you access the last element of a list?",
+                    options: [
+                        "list[last]",
+                        "list[-1]",
+                        "list[len(list)]",
+                        "list.end()"
+                    ],
+                    answer: 1,
+                    explanation: "Negative indexes count from the end of the list, so -1 refers to the last element."
+                },
+                {
+                    level: 18,
+                    module: 'data',
+                    question: "What method adds an element to the end of a list?",
+                    options: [
+                        "list.add()",
+                        "list.push()",
+                        "list.append()",
+                        "list.insert()"
+                    ],
+                    answer: 2,
+                    explanation: "The append() method adds a single element to the end of a list."
+                },
+                {
+                    level: 19,
+                    module: 'data',
+                    question: "Which data structure stores key-value pairs?",
+                    options: [
+                        "List",
+                        "Tuple",
+                        "Set",
+                        "Dictionary"
+                    ],
+                    answer: 3,
+                    explanation: "Dictionaries store data as key-value pairs, allowing fast lookup by key."
+                },
+                {
+                    level: 20,
+                    module: 'data',
+                    question: "What is the output of: [x*2 for x in range(3)]",
+                    options: [
+                        "[0, 2, 4]",
+                        "[2, 4, 6]",
+                        "[0, 1, 4]",
+                        "[1, 2, 3]"
+                    ],
+                    answer: 0,
+                    explanation: "This is a list comprehension that creates a list of doubled values from 0 to 2."
+                },
+                
+                // Level 21-25: OOP Concepts
+                {
+                    level: 21,
+                    module: 'oop',
+                    question: "What is the correct way to create a class?",
+                    options: [
+                        "class MyClass:",
+                        "new class MyClass:",
+                        "create class MyClass:",
+                        "MyClass = class()"
+                    ],
+                    answer: 0,
+                    explanation: "Classes are defined using the class keyword followed by the class name and a colon."
+                },
+                {
+                    level: 22,
+                    module: 'oop',
+                    question: "What does __init__() do?",
+                    options: [
+                        "Initializes the class object",
+                        "Deletes the class object",
+                        "Prints the class information",
+                        "Imports modules for the class"
+                    ],
+                    answer: 0,
+                    explanation: "The __init__() method is the constructor that initializes new objects."
+                },
+                {
+                    level: 23,
+                    module: 'oop',
+                    question: "What is inheritance?",
+                    options: [
+                        "Creating multiple instances of a class",
+                        "Hiding implementation details",
+                        "Deriving a class from another class",
+                        "Bundling data with methods"
+                    ],
+                    answer: 2,
+                    explanation: "Inheritance allows a class to inherit attributes and methods from another class."
+                },
+                {
+                    level: 24,
+                    module: 'oop',
+                    question: "How do you call the parent class method?",
+                    options: [
+                        "parent.method()",
+                        "super().method()",
+                        "self.parent.method()",
+                        "ParentClass.method()"
+                    ],
+                    answer: 1,
+                    explanation: "super() is used to call methods from a parent class."
+                },
+                {
+                    level: 25,
+                    module: 'oop',
+                    question: "What is encapsulation?",
+                    options: [
+                        "Creating multiple classes in one file",
+                        "Hiding the internal state of an object",
+                        "Converting code to bytecode",
+                        "Optimizing code execution"
+                    ],
+                    answer: 1,
+                    explanation: "Encapsulation is the bundling of data with the methods that operate on that data, and restricting direct access."
+                },
+                
+                // Level 26-30: Advanced Topics
+                {
+                    level: 26,
+                    module: 'oop',
+                    question: "How do you handle exceptions?",
+                    options: [
+                        "try-except",
+                        "try-catch",
+                        "error-handle",
+                        "exception"
+                    ],
+                    answer: 0,
+                    explanation: "Python uses try-except blocks to handle exceptions."
+                },
+                {
+                    level: 27,
+                    module: 'oop',
+                    question: "What does the 'with' statement do?",
+                    options: [
+                        "Creates a loop",
+                        "Imports modules",
+                        "Simplifies resource management",
+                        "Defines a context"
+                    ],
+                    answer: 2,
+                    explanation: "The with statement simplifies exception handling for resource management (like files)."
+                },
+                {
+                    level: 28,
+                    module: 'oop',
+                    question: "What is a generator?",
+                    options: [
+                        "A function that returns a sequence of values",
+                        "A function that creates classes",
+                        "A function that generates random numbers",
+                        "A function that handles errors"
+                    ],
+                    answer: 0,
+                    explanation: "Generators are functions that return an iterator which can be iterated over."
+                },
+                {
+                    level: 29,
+                    module: 'oop',
+                    question: "What is the purpose of __name__ == '__main__'?",
+                    options: [
+                        "To check if the script is imported",
+                        "To define the main function",
+                        "To run code only when the script is executed directly",
+                        "To name the main module"
+                    ],
+                    answer: 2,
+                    explanation: "This idiom ensures that code only runs when the script is executed directly, not when imported."
+                },
+                {
+                    level: 30,
+                    module: 'oop',
+                    question: "How do you install a package using pip?",
+                    options: [
+                        "pip install package_name",
+                        "python install package_name",
+                        "install pip package_name",
+                        "python get package_name"
+                    ],
+                    answer: 0,
+                    explanation: "pip is the package installer for Python, and the command is 'pip install package_name'."
+                }
+            ];
+            
+            // Initialize game
+            function initGame() {
+                createLevelButtons();
+                loadLevel(gameState.currentLevel);
+                updateStats();
+                updateProgressBars();
+            }
+            
+            // Create level buttons
+            function createLevelButtons() {
+                levelContainer.innerHTML = '';
+                for (let i = 1; i <= gameState.maxLevel; i++) {
+                    const levelBtn = document.createElement('div');
+                    levelBtn.className = 'level';
+                    levelBtn.textContent = i;
+                    
+                    if (i === gameState.currentLevel) {
+                        levelBtn.classList.add('current');
+                    } else if (gameState.completedLevels.has(i)) {
+                        levelBtn.classList.add('completed', 'unlocked');
+                    } else if (i <= gameState.currentLevel) {
+                        levelBtn.classList.add('unlocked');
+                    } else {
+                        levelBtn.classList.add('locked');
+                    }
+                    
+                    levelBtn.addEventListener('click', () => {
+                        if (!levelBtn.classList.contains('locked')) {
+                            loadLevel(i);
+                        }
+                    });
+                    
+                    levelContainer.appendChild(levelBtn);
+                }
+            }
+            
+            // Load a specific level
+            function loadLevel(level) {
+                gameState.currentLevel = level;
+                currentLevelElement.textContent = level;
+                
+                const question = questions.find(q => q.level === level);
+                if (question) {
+                    renderQuestion(question);
+                }
+                
+                createLevelButtons();
+            }
+            
+            // Render a question
+            function renderQuestion(question) {
+                quizContainer.innerHTML = `
+                    <div class="challenge-container">
+                        <h3 class="challenge-title"><i class="fas fa-question-circle"></i> Level ${question.level}: ${question.module.charAt(0).toUpperCase() + question.module.slice(1)}</h3>
+                        <p class="challenge-description">${question.question}</p>
+                        
+                        ${question.code ? `
+                        <div class="code-editor">
+                            <div class="code-header">
+                                <span>question.py</span>
+                                <span>Python 3.9</span>
+                            </div>
+                            <div class="code-content">${question.code}</div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="options">
+                            ${question.options.map((option, index) => `
+                                <div class="option" data-answer="${index}">${option}</div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="feedback" id="feedback">
+                            <div class="feedback-title" id="feedbackTitle"></div>
+                            <div class="feedback-content" id="feedbackContent"></div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" id="hintBtn">
+                                <i class="fas fa-lightbulb"></i> Show Hint
+                            </button>
+                            <button class="btn btn-primary" id="nextBtn" style="display: none;">
+                                <i class="fas fa-arrow-right"></i> Next Level
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners to options
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', () => checkAnswer(option, question));
+                });
+                
+                // Add event listener to hint button
+                document.getElementById('hintBtn').addEventListener('click', () => {
+                    document.getElementById('feedback').style.display = 'block';
+                    document.getElementById('feedback').className = 'feedback';
+                    document.getElementById('feedbackTitle').innerHTML = '<i class="fas fa-lightbulb"></i> Hint';
+                    document.getElementById('feedbackContent').textContent = question.explanation;
+                });
+            }
+            
+            // Check the selected answer
+            function checkAnswer(selectedOption, question) {
+                const selectedIndex = parseInt(selectedOption.dataset.answer);
+                const feedback = document.getElementById('feedback');
+                const feedbackTitle = document.getElementById('feedbackTitle');
+                const feedbackContent = document.getElementById('feedbackContent');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                // Disable all options
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                });
+                
+                if (selectedIndex === question.answer) {
+                    // Correct answer
+                    selectedOption.classList.add('correct');
+                    feedbackTitle.innerHTML = '<i class="fas fa-check-circle"></i> Correct!';
+                    feedbackContent.textContent = question.explanation;
+                    feedback.classList.add('correct');
+                    feedback.style.display = 'block';
+                    
+                    // Award points
+                    gameState.score += 100;
+                    gameState.xp += 50;
+                    gameState.completedLevels.add(question.level);
+                    
+                    // Show next level button if not the last level
+                    if (question.level < gameState.maxLevel) {
+                        nextBtn.style.display = 'flex';
+                        nextBtn.addEventListener('click', () => {
+                            loadLevel(question.level + 1);
+                        });
+                    } else {
+                        // Last level completed - show victory screen
+                        victoryScreen.style.display = 'flex';
+                        finalScore.textContent = gameState.score;
+                    }
+                } else {
+                    // Incorrect answer
+                    selectedOption.classList.add('incorrect');
+                    feedbackTitle.innerHTML = '<i class="fas fa-times-circle"></i> Incorrect';
+                    feedbackContent.textContent = question.explanation;
+                    feedback.classList.add('incorrect');
+                    feedback.style.display = 'block';
+                    
+                    // Highlight the correct answer
+                    document.querySelector(`.option[data-answer="${question.answer}"]`).classList.add('correct');
+                }
+                
+                updateStats();
+                updateProgressBars();
+            }
+            
+            // Update game stats
+            function updateStats() {
+                scoreValueElement.textContent = gameState.score;
+                xpValueElement.textContent = gameState.xp;
+                currentLevelElement.textContent = gameState.currentLevel;
+            }
+            
+            // Update progress bars
+            function updateProgressBars() {
+                // Calculate overall progress
+                const completed = gameState.completedLevels.size;
+                const totalLevels = gameState.maxLevel;
+                const progressPercent = Math.round((completed / totalLevels) * 100);
+                
+                mainProgress.style.width = `${progressPercent}%`;
+                progressPercentage.textContent = `${progressPercent}% Complete`;
+                
+                // Update module progress bars
+                const modules = ['basics', 'control', 'functions', 'data', 'oop'];
+                modules.forEach(module => {
+                    const moduleQuestions = questions.filter(q => q.module === module);
+                    const moduleCompleted = moduleQuestions.filter(q => gameState.completedLevels.has(q.level)).length;
+                    const moduleProgress = moduleQuestions.length > 0 ? 
+                        Math.round((moduleCompleted / moduleQuestions.length) * 100) : 0;
+                    
+                    document.getElementById(`${module}-progress`).style.width = `${moduleProgress}%`;
+                });
+            }
+            
+            // Restart game
+            restartGameBtn.addEventListener('click', () => {
+                // Reset game state
+                gameState.currentLevel = 1;
+                gameState.score = 0;
+                gameState.xp = 0;
+                gameState.completedLevels.clear();
+                
+                // Hide victory screen
+                victoryScreen.style.display = 'none';
+                
+                // Reinitialize game
+                initGame();
+            });
+            
+            // Module selection
+            document.querySelectorAll('.module').forEach(module => {
+                module.addEventListener('click', function() {
+                    document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const moduleId = this.dataset.module;
+                    gameState.currentModule = moduleId;
+                    
+                    // Update module title and description
+                    const moduleData = {
+                        basics: {
+                            title: "Python Basics",
+                            desc: "Learn the fundamental building blocks of Python programming including variables, data types, and basic operations."
+                        },
+                        control: {
+                            title: "Control Structures",
+                            desc: "Control structures determine the flow of your program. Learn how to make decisions and control the execution of your code with conditionals and loops."
+                        },
+                        functions: {
+                            title: "Functions",
+                            desc: "Functions allow you to encapsulate reusable pieces of code. Master function creation and usage to write cleaner programs."
+                        },
+                        data: {
+                            title: "Data Structures",
+                            desc: "Discover how to store collections of data using lists, dictionaries, tuples, and sets - Python's powerful data structures."
+                        },
+                        oop: {
+                            title: "OOP Concepts",
+                            desc: "Learn Object-Oriented Programming in Python with classes, objects, inheritance, and other key concepts."
+                        }
+                    };
+                    
+                    moduleTitle.textContent = moduleData[moduleId].title;
+                    moduleDescription.textContent = moduleData[moduleId].desc;
+                    
+                    // Load the first uncompleted level in this module
+                    const moduleLevels = questions.filter(q => q.module === moduleId).map(q => q.level);
+                    const firstUncompleted = moduleLevels.find(level => !gameState.completedLevels.has(level)) || moduleLevels[0];
+                    loadLevel(firstUncompleted);
+                });
+            });
+            
+            // Initialize the game
+            initGame();
+        });
+    </script>
+</body>
+</html>
