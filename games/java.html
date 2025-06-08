@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://raw.githubusercontent.com/thedevguruwebsite/Website/refs/heads/main/img/logo.png">
+    <title>Java Learning Adventure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(to right, #457fca, #5691c8);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: #ffd43b;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 25px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .module {
+            padding: 15px 25px;
+            border-left: 5px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .module:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .module.active {
+            border-left: 5px solid #ffd43b;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .module i {
+            font-size: 20px;
+            color: #3498db;
+        }
+        
+        .module h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .module-progress {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .module-title {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .module-description {
+            color: #34495e;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .challenge-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .challenge-title {
+            font-size: 24px;
+            color: #3498db;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .challenge-description {
+            color: #2c3e50;
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .code-editor {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .code-content {
+            color: #d4d4d4;
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: #e3f2fd;
+            border: 2px solid #bbdefb;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .option:hover {
+            background: #bbdefb;
+            transform: translateY(-3px);
+        }
+        
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #a5d6a7;
+        }
+        
+        .option.incorrect {
+            background: #ffcdd2;
+            border-color: #ef9a9a;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+        
+        .btn-secondary:hover {
+            background: #dfe6e9;
+        }
+        
+        .progress-container {
+            margin-top: auto;
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-main {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-main {
+            height: 100%;
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            border: 2px solid #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            border: 2px solid #ffcdd2;
+            color: #c62828;
+        }
+        
+        .feedback-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feedback-content {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .level-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .level {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .level.locked {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        .level.unlocked {
+            background: #81c784;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .level.current {
+            background: #ffd54f;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 213, 79, 0.7);
+        }
+        
+        .level.completed {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .level-select-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 20px 0 15px;
+        }
+        
+        .victory-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+        
+        .victory-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .trophy {
+            font-size: 100px;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat-box {
+                min-width: 80px;
+                padding: 6px 10px;
+            }
+            
+            .level {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <div class="logo">
+                <i class="fab fa-java"></i>
+                <h1>Java Learning Adventure</h1>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="currentLevel">1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">XP</div>
+                    <div class="stat-value" id="xpValue">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="scoreValue">0</div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="sidebar">
+                <div class="module active" data-module="basics">
+                    <i class="fas fa-vial"></i>
+                    <div>
+                        <h3>Java Basics</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="basics-progress" style="width: 20%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="control">
+                    <i class="fas fa-code"></i>
+                    <div>
+                        <h3>Control Structures</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="control-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="methods">
+                    <i class="fas fa-function"></i>
+                    <div>
+                        <h3>Methods</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="methods-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="oop">
+                    <i class="fas fa-cube"></i>
+                    <div>
+                        <h3>OOP Concepts</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="oop-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="collections">
+                    <i class="fas fa-list"></i>
+                    <div>
+                        <h3>Collections</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="collections-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <h2 class="module-title" id="moduleTitle">Java Basics</h2>
+                <p class="module-description" id="moduleDescription">
+                    Learn the fundamental building blocks of Java programming including variables, data types, and basic operations.
+                </p>
+                
+                <div class="level-select-title">Select Level</div>
+                <div class="level-container" id="levelContainer">
+                    <!-- Levels will be dynamically generated -->
+                </div>
+                
+                <div id="quizContainer">
+                    <!-- Quiz content will be dynamically generated -->
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Course Progress</span>
+                        <span id="progressPercentage">5% Complete</span>
+                    </div>
+                    <div class="progress-bar-main">
+                        <div class="progress-main" id="mainProgress" style="width: 5%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="victory-screen" id="victoryScreen">
+                <div class="victory-content">
+                    <div class="trophy">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h1>Congratulations!</h1>
+                    <p class="module-description">You've completed all 30 levels of the Java Learning Adventure!</p>
+                    <p class="stat-value" style="font-size: 32px; margin: 20px 0;">Final Score: <span id="finalScore">0</span></p>
+                    <button class="btn btn-primary" id="restartGameBtn">
+                        <i class="fas fa-redo"></i> Play Again
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game state
+            const gameState = {
+                currentLevel: 1,
+                maxLevel: 30,
+                score: 0,
+                xp: 0,
+                currentModule: 'basics',
+                completedLevels: new Set(),
+                levels: []
+            };
+            
+            // DOM elements
+            const levelContainer = document.getElementById('levelContainer');
+            const quizContainer = document.getElementById('quizContainer');
+            const moduleTitle = document.getElementById('moduleTitle');
+            const moduleDescription = document.getElementById('moduleDescription');
+            const currentLevelElement = document.getElementById('currentLevel');
+            const xpValueElement = document.getElementById('xpValue');
+            const scoreValueElement = document.getElementById('scoreValue');
+            const mainProgress = document.getElementById('mainProgress');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const victoryScreen = document.getElementById('victoryScreen');
+            const finalScore = document.getElementById('finalScore');
+            const restartGameBtn = document.getElementById('restartGameBtn');
+            
+            // Questions database
+            const questions = [
+                // Level 1-5: Java Basics
+                {
+                    level: 1,
+                    module: 'basics',
+                    question: "How do you print 'Hello, World!' in Java?",
+                    options: [
+                        "System.out.println('Hello, World!');",
+                        "console.log('Hello, World!');",
+                        "print('Hello, World!');",
+                        "echo 'Hello, World!';"
+                    ],
+                    answer: 0,
+                    explanation: "In Java, System.out.println() is used to output text to the console."
+                },
+                {
+                    level: 2,
+                    module: 'basics',
+                    question: "Which of the following is a valid variable declaration?",
+                    options: [
+                        "int 123var;",
+                        "String my-variable;",
+                        "double $price;",
+                        "boolean is-valid;"
+                    ],
+                    answer: 2,
+                    explanation: "Variable names can contain letters, digits, underscores, and dollar signs, but cannot start with a digit or contain hyphens."
+                },
+                {
+                    level: 3,
+                    module: 'basics',
+                    question: "What is the default value of an int in Java?",
+                    options: [
+                        "0",
+                        "null",
+                        "1",
+                        "undefined"
+                    ],
+                    answer: 0,
+                    explanation: "In Java, primitive data types have default values. For int, the default value is 0."
+                },
+                {
+                    level: 4,
+                    module: 'basics',
+                    question: "Which keyword is used to create a constant in Java?",
+                    options: [
+                        "static",
+                        "final",
+                        "const",
+                        "constant"
+                    ],
+                    answer: 1,
+                    explanation: "The 'final' keyword is used to declare constants in Java."
+                },
+                {
+                    level: 5,
+                    module: 'basics',
+                    question: "What is the correct way to create an array of integers?",
+                    options: [
+                        "int[] numbers = {1, 2, 3};",
+                        "int numbers[] = {1, 2, 3};",
+                        "Array numbers = [1, 2, 3];",
+                        "Both A and B"
+                    ],
+                    answer: 3,
+                    explanation: "Both int[] numbers and int numbers[] are valid ways to declare arrays in Java."
+                },
+                
+                // Level 6-10: Control Structures
+                {
+                    level: 6,
+                    module: 'control',
+                    question: "What is the correct syntax for an if statement?",
+                    options: [
+                        "if (x > 5) { }",
+                        "if x > 5: { }",
+                        "if x > 5 then { }",
+                        "if [x > 5] { }"
+                    ],
+                    answer: 0,
+                    explanation: "Java uses parentheses around the condition and curly braces for the code block."
+                },
+                {
+                    level: 7,
+                    module: 'control',
+                    question: "Which loop is guaranteed to execute at least once?",
+                    options: [
+                        "for loop",
+                        "while loop",
+                        "do-while loop",
+                        "for-each loop"
+                    ],
+                    answer: 2,
+                    explanation: "The do-while loop checks the condition after executing the loop body, so it always runs at least once."
+                },
+                {
+                    level: 8,
+                    module: 'control',
+                    question: "How do you write a single-line comment in Java?",
+                    options: [
+                        "// This is a comment",
+                        "/* This is a comment */",
+                        "# This is a comment",
+                        "-- This is a comment"
+                    ],
+                    answer: 0,
+                    explanation: "Java uses double slashes (//) for single-line comments."
+                },
+                {
+                    level: 9,
+                    module: 'control',
+                    question: "What does the 'break' statement do?",
+                    options: [
+                        "Terminates the program",
+                        "Skips the current iteration of a loop",
+                        "Exits the current loop or switch statement",
+                        "Continues to the next case in a switch"
+                    ],
+                    answer: 2,
+                    explanation: "The break statement exits the current loop or switch statement."
+                },
+                {
+                    level: 10,
+                    module: 'control',
+                    question: "Which of these is a valid switch statement?",
+                    options: [
+                        "switch (x) { case 1: ... }",
+                        "switch x { case 1: ... }",
+                        "switch { case x=1: ... }",
+                        "switch on x { case 1: ... }"
+                    ],
+                    answer: 0,
+                    explanation: "The correct syntax is switch (variable) { case value: ... }"
+                },
+                
+                // Level 11-15: Methods
+                {
+                    level: 11,
+                    module: 'methods',
+                    question: "How do you define a method in Java?",
+                    options: [
+                        "function myMethod() { }",
+                        "method myMethod() { }",
+                        "def myMethod() { }",
+                        "void myMethod() { }"
+                    ],
+                    answer: 3,
+                    explanation: "Methods in Java are defined with a return type, method name, and parentheses."
+                },
+                {
+                    level: 12,
+                    module: 'methods',
+                    question: "What is method overloading?",
+                    options: [
+                        "Creating multiple methods with the same name but different parameters",
+                        "Creating multiple methods with the same name and same parameters",
+                        "Extending a method from a parent class",
+                        "Making a method run faster"
+                    ],
+                    answer: 0,
+                    explanation: "Method overloading allows multiple methods with the same name but different parameters."
+                },
+                {
+                    level: 13,
+                    module: 'methods',
+                    question: "What is the return type of a constructor?",
+                    options: [
+                        "void",
+                        "int",
+                        "Class name",
+                        "Constructors don't have a return type"
+                    ],
+                    answer: 3,
+                    explanation: "Constructors don't have a return type, not even void."
+                },
+                {
+                    level: 14,
+                    module: 'methods',
+                    question: "What does the 'void' keyword indicate?",
+                    options: [
+                        "The method returns a value",
+                        "The method returns no value",
+                        "The method is empty",
+                        "The method is virtual"
+                    ],
+                    answer: 1,
+                    explanation: "void indicates that the method does not return any value."
+                },
+                {
+                    level: 15,
+                    module: 'methods',
+                    question: "What is the purpose of the 'return' statement?",
+                    options: [
+                        "To print a value to the console",
+                        "To exit the program",
+                        "To pass a value back to the caller",
+                        "To indicate the end of a method"
+                    ],
+                    answer: 2,
+                    explanation: "The return statement sends a value back to the code that called the method."
+                },
+                
+                // Level 16-20: OOP Concepts
+                {
+                    level: 16,
+                    module: 'oop',
+                    question: "What is the correct way to create a class?",
+                    options: [
+                        "class MyClass { }",
+                        "new class MyClass { }",
+                        "create class MyClass { }",
+                        "MyClass = class() { }"
+                    ],
+                    answer: 0,
+                    explanation: "Classes are defined using the 'class' keyword followed by the class name."
+                },
+                {
+                    level: 17,
+                    module: 'oop',
+                    question: "Which keyword is used for inheritance?",
+                    options: [
+                        "inherits",
+                        "extends",
+                        "implements",
+                        "super"
+                    ],
+                    answer: 1,
+                    explanation: "The 'extends' keyword is used for class inheritance in Java."
+                },
+                {
+                    level: 18,
+                    module: 'oop',
+                    question: "What is polymorphism?",
+                    options: [
+                        "Creating multiple classes with the same name",
+                        "The ability of an object to take many forms",
+                        "Hiding implementation details",
+                        "Bundling data with methods"
+                    ],
+                    answer: 1,
+                    explanation: "Polymorphism allows objects of different classes to be treated as objects of a common superclass."
+                },
+                {
+                    level: 19,
+                    module: 'oop',
+                    question: "What is an abstract class?",
+                    options: [
+                        "A class that cannot be instantiated",
+                        "A class with no methods",
+                        "A class that only contains static methods",
+                        "A class that cannot be extended"
+                    ],
+                    answer: 0,
+                    explanation: "An abstract class cannot be instantiated and may contain abstract methods."
+                },
+                {
+                    level: 20,
+                    module: 'oop',
+                    question: "Which keyword is used to refer to the parent class?",
+                    options: [
+                        "parent",
+                        "this",
+                        "super",
+                        "base"
+                    ],
+                    answer: 2,
+                    explanation: "The 'super' keyword refers to the parent class."
+                },
+                
+                // Level 21-25: Collections
+                {
+                    level: 21,
+                    module: 'collections',
+                    question: "Which collection stores key-value pairs?",
+                    options: [
+                        "ArrayList",
+                        "LinkedList",
+                        "HashMap",
+                        "HashSet"
+                    ],
+                    answer: 2,
+                    explanation: "HashMap stores data as key-value pairs."
+                },
+                {
+                    level: 22,
+                    module: 'collections',
+                    question: "Which interface does ArrayList implement?",
+                    options: [
+                        "Set",
+                        "Map",
+                        "List",
+                        "Queue"
+                    ],
+                    answer: 2,
+                    explanation: "ArrayList implements the List interface."
+                },
+                {
+                    level: 23,
+                    module: 'collections',
+                    question: "How do you sort a List?",
+                    options: [
+                        "list.sort()",
+                        "Collections.sort(list)",
+                        "Arrays.sort(list)",
+                        "list.order()"
+                    ],
+                    answer: 1,
+                    explanation: "The Collections.sort() method is used to sort lists."
+                },
+                {
+                    level: 24,
+                    module: 'collections',
+                    question: "Which collection does not allow duplicates?",
+                    options: [
+                        "ArrayList",
+                        "LinkedList",
+                        "HashSet",
+                        "All of the above"
+                    ],
+                    answer: 2,
+                    explanation: "Set implementations like HashSet do not allow duplicate elements."
+                },
+                {
+                    level: 25,
+                    module: 'collections',
+                    question: "What is the difference between ArrayList and LinkedList?",
+                    options: [
+                        "ArrayList is faster for access, LinkedList for insertion/deletion",
+                        "LinkedList is faster for access, ArrayList for insertion/deletion",
+                        "They are identical in performance",
+                        "ArrayList can only store objects, LinkedList can store primitives"
+                    ],
+                    answer: 0,
+                    explanation: "ArrayList has faster random access, while LinkedList has faster insertion and deletion."
+                },
+                
+                // Level 26-30: Advanced Topics
+                {
+                    level: 26,
+                    module: 'oop',
+                    question: "How do you handle exceptions?",
+                    options: [
+                        "try-except",
+                        "try-catch",
+                        "error-handle",
+                        "exception"
+                    ],
+                    answer: 1,
+                    explanation: "Java uses try-catch blocks to handle exceptions."
+                },
+                {
+                    level: 27,
+                    module: 'oop',
+                    question: "What is the finally block used for?",
+                    options: [
+                        "To handle exceptions",
+                        "To execute code regardless of exceptions",
+                        "To catch any unhandled exceptions",
+                        "To define custom exceptions"
+                    ],
+                    answer: 1,
+                    explanation: "The finally block always executes, whether an exception occurred or not."
+                },
+                {
+                    level: 28,
+                    module: 'oop',
+                    question: "What is a thread in Java?",
+                    options: [
+                        "A sequence of executed statements",
+                        "A lightweight process",
+                        "A collection of classes",
+                        "A type of exception"
+                    ],
+                    answer: 1,
+                    explanation: "A thread is a lightweight sub-process that allows concurrent execution."
+                },
+                {
+                    level: 29,
+                    module: 'oop',
+                    question: "Which keyword is used to create a thread?",
+                    options: [
+                        "new Thread()",
+                        "create Thread()",
+                        "run Thread()",
+                        "start Thread()"
+                    ],
+                    answer: 0,
+                    explanation: "Threads are created by instantiating the Thread class."
+                },
+                {
+                    level: 30,
+                    module: 'oop',
+                    question: "What is the purpose of the synchronized keyword?",
+                    options: [
+                        "To make a method run faster",
+                        "To prevent multiple threads from accessing a method simultaneously",
+                        "To synchronize data with a database",
+                        "To make a method static"
+                    ],
+                    answer: 1,
+                    explanation: "synchronized prevents multiple threads from accessing a method or block at the same time."
+                }
+            ];
+            
+            // Initialize game
+            function initGame() {
+                createLevelButtons();
+                loadLevel(gameState.currentLevel);
+                updateStats();
+                updateProgressBars();
+            }
+            
+            // Create level buttons
+            function createLevelButtons() {
+                levelContainer.innerHTML = '';
+                for (let i = 1; i <= gameState.maxLevel; i++) {
+                    const levelBtn = document.createElement('div');
+                    levelBtn.className = 'level';
+                    levelBtn.textContent = i;
+                    
+                    if (i === gameState.currentLevel) {
+                        levelBtn.classList.add('current');
+                    } else if (gameState.completedLevels.has(i)) {
+                        levelBtn.classList.add('completed', 'unlocked');
+                    } else if (i <= gameState.currentLevel) {
+                        levelBtn.classList.add('unlocked');
+                    } else {
+                        levelBtn.classList.add('locked');
+                    }
+                    
+                    levelBtn.addEventListener('click', () => {
+                        if (!levelBtn.classList.contains('locked')) {
+                            loadLevel(i);
+                        }
+                    });
+                    
+                    levelContainer.appendChild(levelBtn);
+                }
+            }
+            
+            // Load a specific level
+            function loadLevel(level) {
+                gameState.currentLevel = level;
+                currentLevelElement.textContent = level;
+                
+                const question = questions.find(q => q.level === level);
+                if (question) {
+                    renderQuestion(question);
+                }
+                
+                createLevelButtons();
+            }
+            
+            // Render a question
+            function renderQuestion(question) {
+                quizContainer.innerHTML = `
+                    <div class="challenge-container">
+                        <h3 class="challenge-title"><i class="fas fa-question-circle"></i> Level ${question.level}: ${question.module.charAt(0).toUpperCase() + question.module.slice(1)}</h3>
+                        <p class="challenge-description">${question.question}</p>
+                        
+                        ${question.code ? `
+                        <div class="code-editor">
+                            <div class="code-header">
+                                <span>question.java</span>
+                                <span>Java 17</span>
+                            </div>
+                            <div class="code-content">${question.code}</div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="options">
+                            ${question.options.map((option, index) => `
+                                <div class="option" data-answer="${index}">${option}</div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="feedback" id="feedback">
+                            <div class="feedback-title" id="feedbackTitle"></div>
+                            <div class="feedback-content" id="feedbackContent"></div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" id="hintBtn">
+                                <i class="fas fa-lightbulb"></i> Show Hint
+                            </button>
+                            <button class="btn btn-primary" id="nextBtn" style="display: none;">
+                                <i class="fas fa-arrow-right"></i> Next Level
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners to options
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', () => checkAnswer(option, question));
+                });
+                
+                // Add event listener to hint button
+                document.getElementById('hintBtn').addEventListener('click', () => {
+                    document.getElementById('feedback').style.display = 'block';
+                    document.getElementById('feedback').className = 'feedback';
+                    document.getElementById('feedbackTitle').innerHTML = '<i class="fas fa-lightbulb"></i> Hint';
+                    document.getElementById('feedbackContent').textContent = question.explanation;
+                });
+            }
+            
+            // Check the selected answer
+            function checkAnswer(selectedOption, question) {
+                const selectedIndex = parseInt(selectedOption.dataset.answer);
+                const feedback = document.getElementById('feedback');
+                const feedbackTitle = document.getElementById('feedbackTitle');
+                const feedbackContent = document.getElementById('feedbackContent');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                // Disable all options
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                });
+                
+                if (selectedIndex === question.answer) {
+                    // Correct answer
+                    selectedOption.classList.add('correct');
+                    feedbackTitle.innerHTML = '<i class="fas fa-check-circle"></i> Correct!';
+                    feedbackContent.textContent = question.explanation;
+                    feedback.classList.add('correct');
+                    feedback.style.display = 'block';
+                    
+                    // Award points
+                    gameState.score += 100;
+                    gameState.xp += 50;
+                    gameState.completedLevels.add(question.level);
+                    
+                    // Show next level button if not the last level
+                    if (question.level < gameState.maxLevel) {
+                        nextBtn.style.display = 'flex';
+                        nextBtn.addEventListener('click', () => {
+                            loadLevel(question.level + 1);
+                        });
+                    } else {
+                        // Last level completed - show victory screen
+                        victoryScreen.style.display = 'flex';
+                        finalScore.textContent = gameState.score;
+                    }
+                } else {
+                    // Incorrect answer
+                    selectedOption.classList.add('incorrect');
+                    feedbackTitle.innerHTML = '<i class="fas fa-times-circle"></i> Incorrect';
+                    feedbackContent.textContent = question.explanation;
+                    feedback.classList.add('incorrect');
+                    feedback.style.display = 'block';
+                    
+                    // Highlight the correct answer
+                    document.querySelector(`.option[data-answer="${question.answer}"]`).classList.add('correct');
+                }
+                
+                updateStats();
+                updateProgressBars();
+            }
+            
+            // Update game stats
+            function updateStats() {
+                scoreValueElement.textContent = gameState.score;
+                xpValueElement.textContent = gameState.xp;
+                currentLevelElement.textContent = gameState.currentLevel;
+            }
+            
+            // Update progress bars
+            function updateProgressBars() {
+                // Calculate overall progress
+                const completed = gameState.completedLevels.size;
+                const totalLevels = gameState.maxLevel;
+                const progressPercent = Math.round((completed / totalLevels) * 100);
+                
+                mainProgress.style.width = `${progressPercent}%`;
+                progressPercentage.textContent = `${progressPercent}% Complete`;
+                
+                // Update module progress bars
+                const modules = ['basics', 'control', 'methods', 'oop', 'collections'];
+                modules.forEach(module => {
+                    const moduleQuestions = questions.filter(q => q.module === module);
+                    const moduleCompleted = moduleQuestions.filter(q => gameState.completedLevels.has(q.level)).length;
+                    const moduleProgress = moduleQuestions.length > 0 ? 
+                        Math.round((moduleCompleted / moduleQuestions.length) * 100) : 0;
+                    
+                    document.getElementById(`${module}-progress`).style.width = `${moduleProgress}%`;
+                });
+            }
+            
+            // Restart game
+            restartGameBtn.addEventListener('click', () => {
+                // Reset game state
+                gameState.currentLevel = 1;
+                gameState.score = 0;
+                gameState.xp = 0;
+                gameState.completedLevels.clear();
+                
+                // Hide victory screen
+                victoryScreen.style.display = 'none';
+                
+                // Reinitialize game
+                initGame();
+            });
+            
+            // Module selection
+            document.querySelectorAll('.module').forEach(module => {
+                module.addEventListener('click', function() {
+                    document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const moduleId = this.dataset.module;
+                    gameState.currentModule = moduleId;
+                    
+                    // Update module title and description
+                    const moduleData = {
+                        basics: {
+                            title: "Java Basics",
+                            desc: "Learn the fundamental building blocks of Java programming including variables, data types, and basic operations."
+                        },
+                        control: {
+                            title: "Control Structures",
+                            desc: "Control structures determine the flow of your program. Learn how to make decisions and control the execution of your code with conditionals and loops."
+                        },
+                        methods: {
+                            title: "Methods",
+                            desc: "Methods allow you to encapsulate reusable pieces of code. Master method creation and usage to write cleaner programs."
+                        },
+                        oop: {
+                            title: "OOP Concepts",
+                            desc: "Learn Object-Oriented Programming in Java with classes, objects, inheritance, and other key concepts."
+                        },
+                        collections: {
+                            title: "Collections",
+                            desc: "Discover Java's powerful collection framework for storing and manipulating groups of objects."
+                        }
+                    };
+                    
+                    moduleTitle.textContent = moduleData[moduleId].title;
+                    moduleDescription.textContent = moduleData[moduleId].desc;
+                    
+                    // Load the first uncompleted level in this module
+                    const moduleLevels = questions.filter(q => q.module === moduleId).map(q => q.level);
+                    const firstUncompleted = moduleLevels.find(level => !gameState.completedLevels.has(level)) || moduleLevels[0];
+                    loadLevel(firstUncompleted);
+                });
+            });
+            
+            // Initialize the game
+            initGame();
+        });
+    </script>
+</body>
+</html>
