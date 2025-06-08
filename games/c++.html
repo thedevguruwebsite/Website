@@ -1245,6 +1245,454 @@ int main() {
     
     return 0;
 }`
+                },
+                // Additional questions to reach 30 levels
+                {
+                    level: 16,
+                    module: 'oop',
+                    question: "What is a class in C++?",
+                    options: [
+                        "A built-in data type",
+                        "A blueprint for creating objects",
+                        "A function that returns an object",
+                        "A namespace for variables"
+                    ],
+                    answer: 1,
+                    explanation: "A class is a user-defined data type that serves as a blueprint for creating objects.",
+                    code: `#include <iostream>
+using namespace std;
+
+// Class definition
+<span class="code-keyword">class</span> Rectangle {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">int</span> width;
+    <span class="code-keyword">int</span> height;
+    
+    <span class="code-keyword">int</span> area() {
+        <span class="code-keyword">return</span> width * height;
+    }
+};
+
+int main() {
+    Rectangle rect;
+    rect.width = 5;
+    rect.height = 10;
+    cout << "Area: " << rect.area() << endl;
+    return 0;
+}`
+                },
+                {
+                    level: 17,
+                    module: 'oop',
+                    question: "What is encapsulation in OOP?",
+                    options: [
+                        "Combining data and functions into a single unit",
+                        "Creating multiple functions with the same name",
+                        "Deriving a class from another class",
+                        "Hiding implementation details from the user"
+                    ],
+                    answer: 0,
+                    explanation: "Encapsulation is the bundling of data and the methods that operate on that data.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">class</span> BankAccount {
+<span class="code-keyword">private</span>:
+    <span class="code-keyword">double</span> balance; // Hidden from direct access
+    
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> deposit(<span class="code-keyword">double</span> amount) {
+        <span class="code-keyword">if</span> (amount > 0) balance += amount;
+    }
+    
+    <span class="code-keyword">double</span> getBalance() {
+        <span class="code-keyword">return</span> balance;
+    }
+};
+
+int main() {
+    BankAccount account;
+    account.deposit(1000);
+    cout << "Balance: " << account.getBalance() << endl;
+    return 0;
+}`
+                },
+                {
+                    level: 18,
+                    module: 'oop',
+                    question: "What is inheritance in C++?",
+                    options: [
+                        "Creating a new class from an existing class",
+                        "Hiding data within a class",
+                        "Overriding existing functions",
+                        "Creating multiple instances of a class"
+                    ],
+                    answer: 0,
+                    explanation: "Inheritance allows a class to inherit properties and behaviors from another class.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">class</span> Animal {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> eat() {
+        cout << "I can eat!" << endl;
+    }
+};
+
+<span class="code-keyword">class</span> Dog : <span class="code-keyword">public</span> Animal {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> bark() {
+        cout << "I can bark! Woof woof!" << endl;
+    }
+};
+
+int main() {
+    Dog dog;
+    dog.eat();  // Inherited from Animal
+    dog.bark(); // Defined in Dog
+    return 0;
+}`
+                },
+                {
+                    level: 19,
+                    module: 'oop',
+                    question: "What is polymorphism?",
+                    options: [
+                        "The ability to take many forms",
+                        "Storing data in different formats",
+                        "Creating multiple variables with same name",
+                        "Hiding implementation details"
+                    ],
+                    answer: 0,
+                    explanation: "Polymorphism allows objects of different classes to be treated as objects of a common super class.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">class</span> Shape {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">virtual</span> <span class="code-keyword">void</span> draw() {
+        cout << "Drawing a shape" << endl;
+    }
+};
+
+<span class="code-keyword">class</span> Circle : <span class="code-keyword">public</span> Shape {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> draw() {
+        cout << "Drawing a circle" << endl;
+    }
+};
+
+int main() {
+    Shape* shape;
+    Circle circle;
+    shape = &circle;
+    shape->draw(); // Calls Circle's draw method
+    return 0;
+}`
+                },
+                {
+                    level: 20,
+                    module: 'oop',
+                    question: "What is a constructor?",
+                    options: [
+                        "A special function called when an object is created",
+                        "A function that destroys an object",
+                        "A function that returns a value",
+                        "A function that initializes static variables"
+                    ],
+                    answer: 0,
+                    explanation: "A constructor is a special member function that is called when an object of a class is created.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">class</span> Book {
+<span class="code-keyword">public</span>:
+    string title;
+    string author;
+    
+    // Constructor
+    Book(string t, string a) {
+        title = t;
+        author = a;
+    }
+};
+
+int main() {
+    Book myBook("The C++ Programming Language", "Bjarne Stroustrup");
+    cout << "Book: " << myBook.title << " by " << myBook.author << endl;
+    return 0;
+}`
+                },
+                {
+                    level: 21,
+                    module: 'stl',
+                    question: "Which STL container provides dynamic array functionality?",
+                    options: [
+                        "vector",
+                        "list",
+                        "map",
+                        "set"
+                    ],
+                    answer: 0,
+                    explanation: "vector is a sequence container that encapsulates dynamic size arrays.",
+                    code: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<<span class="code-keyword">int</span>> numbers;
+    numbers.push_back(10);
+    numbers.push_back(20);
+    numbers.push_back(30);
+    
+    cout << "Numbers: ";
+    for (int num : numbers) {
+        cout << num << " ";
+    }
+    return 0;
+}`
+                },
+                {
+                    level: 22,
+                    module: 'stl',
+                    question: "Which STL container stores elements in key-value pairs?",
+                    options: [
+                        "map",
+                        "vector",
+                        "set",
+                        "list"
+                    ],
+                    answer: 0,
+                    explanation: "map is an associative container that stores elements formed by a combination of a key and a value.",
+                    code: `#include <iostream>
+#include <map>
+using namespace std;
+
+int main() {
+    map<string, <span class="code-keyword">int</span>> ages;
+    ages["Alice"] = 30;
+    ages["Bob"] = 25;
+    ages["Charlie"] = 35;
+    
+    cout << "Bob's age: " << ages["Bob"] << endl;
+    return 0;
+}`
+                },
+                {
+                    level: 23,
+                    module: 'stl',
+                    question: "Which algorithm is used to sort elements in a container?",
+                    options: [
+                        "sort()",
+                        "find()",
+                        "reverse()",
+                        "copy()"
+                    ],
+                    answer: 0,
+                    explanation: "The sort() algorithm sorts elements in a range into ascending order.",
+                    code: `#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<<span class="code-keyword">int</span>> numbers = {5, 3, 8, 1, 4};
+    sort(numbers.begin(), numbers.end());
+    
+    cout << "Sorted numbers: ";
+    for (int num : numbers) {
+        cout << num << " ";
+    }
+    return 0;
+}`
+                },
+                {
+                    level: 24,
+                    module: 'stl',
+                    question: "What does the STL stack container provide?",
+                    options: [
+                        "Last-In-First-Out (LIFO) data structure",
+                        "First-In-First-Out (FIFO) data structure",
+                        "Associative container",
+                        "Dynamic array"
+                    ],
+                    answer: 0,
+                    explanation: "stack is a container adapter that gives the programmer the functionality of a stack - LIFO.",
+                    code: `#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+    stack<<span class="code-keyword">int</span>> s;
+    s.push(10);
+    s.push(20);
+    s.push(30);
+    
+    cout << "Top element: " << s.top() << endl; // 30
+    s.pop();
+    cout << "Top element after pop: " << s.top() << endl; // 20
+    return 0;
+}`
+                },
+                {
+                    level: 25,
+                    module: 'stl',
+                    question: "What is the purpose of the STL iterator?",
+                    options: [
+                        "To traverse through the elements of a container",
+                        "To create new containers",
+                        "To modify container elements",
+                        "To delete container elements"
+                    ],
+                    answer: 0,
+                    explanation: "Iterators are used to point to memory addresses of STL container elements.",
+                    code: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<<span class="code-keyword">int</span>> vec = {10, 20, 30};
+    vector<<span class="code-keyword">int</span>>::iterator it;
+    
+    cout << "Elements: ";
+    for (it = vec.begin(); it != vec.end(); it++) {
+        cout << *it << " ";
+    }
+    return 0;
+}`
+                },
+                // Additional questions to reach 30 levels
+                {
+                    level: 26,
+                    module: 'functions',
+                    question: "What is a recursive function?",
+                    options: [
+                        "A function that calls itself",
+                        "A function that calls other functions",
+                        "A function that returns a value",
+                        "A function that takes no parameters"
+                    ],
+                    answer: 0,
+                    explanation: "A recursive function is a function that calls itself to solve smaller instances of the same problem.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n <= 1) <span class="code-keyword">return</span> 1;
+    <span class="code-keyword">else</span> <span class="code-keyword">return</span> n * factorial(n - 1);
+}
+
+int main() {
+    cout << "Factorial of 5: " << factorial(5) << endl;
+    return 0;
+}`
+                },
+                {
+                    level: 27,
+                    module: 'control',
+                    question: "What is the purpose of the continue statement?",
+                    options: [
+                        "To skip the current iteration of a loop",
+                        "To terminate the loop immediately",
+                        "To restart the loop from the beginning",
+                        "To exit the current function"
+                    ],
+                    answer: 0,
+                    explanation: "The continue statement skips the current iteration of a loop and continues with the next iteration.",
+                    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = 0; i < 5; i++) {
+        <span class="code-keyword">if</span> (i == 2) <span class="code-keyword">continue</span>;
+        cout << i << " ";
+    }
+    // Output: 0 1 3 4
+    return 0;
+}`
+                },
+                {
+                    level: 28,
+                    module: 'basics',
+                    question: "What is the correct way to declare a constant in C++?",
+                    options: [
+                        "const int MAX = 100;",
+                        "int const MAX = 100;",
+                        "#define MAX 100",
+                        "All of the above"
+                    ],
+                    answer: 3,
+                    explanation: "All these are valid ways to declare constants in C++, though const is preferred in modern C++.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">#define</span> MAX_SIZE 100
+
+int main() {
+    <span class="code-keyword">const</span> <span class="code-keyword">int</span> MAX_VALUE = 100;
+    <span class="code-keyword">int</span> const MIN_VALUE = 0;
+    
+    cout << "Max: " << MAX_VALUE << endl;
+    cout << "Min: " << MIN_VALUE << endl;
+    cout << "Size: " << MAX_SIZE << endl;
+    return 0;
+}`
+                },
+                {
+                    level: 29,
+                    module: 'oop',
+                    question: "What is an abstract class in C++?",
+                    options: [
+                        "A class that cannot be instantiated",
+                        "A class with no member functions",
+                        "A class that only contains static members",
+                        "A class with private constructors"
+                    ],
+                    answer: 0,
+                    explanation: "An abstract class is a class that contains at least one pure virtual function and cannot be instantiated.",
+                    code: `#include <iostream>
+using namespace std;
+
+<span class="code-keyword">class</span> Shape {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">virtual</span> <span class="code-keyword">void</span> draw() = 0; // Pure virtual function
+};
+
+<span class="code-keyword">class</span> Circle : <span class="code-keyword">public</span> Shape {
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> draw() {
+        cout << "Drawing a circle" << endl;
+    }
+};
+
+int main() {
+    // Shape shape; // Error: cannot instantiate abstract class
+    Circle circle;
+    circle.draw();
+    return 0;
+}`
+                },
+                {
+                    level: 30,
+                    module: 'stl',
+                    question: "What is the purpose of the STL pair container?",
+                    options: [
+                        "To store two heterogeneous objects as a single unit",
+                        "To store multiple key-value pairs",
+                        "To store two homogeneous objects",
+                        "To create a tuple with two elements"
+                    ],
+                    answer: 0,
+                    explanation: "The pair container is a simple container defined in <utility> header consisting of two data elements or objects.",
+                    code: `#include <iostream>
+#include <utility>
+using namespace std;
+
+int main() {
+    pair<string, <span class="code-keyword">int</span>> person("Alice", 30);
+    cout << "Name: " << person.first << ", Age: " << person.second << endl;
+    return 0;
+}`
                 }
             ];
             
@@ -1410,6 +1858,51 @@ int main() {
                             break;
                         case 15:
                             output = "Value after increment: 6";
+                            break;
+                        case 16:
+                            output = "Area: 50";
+                            break;
+                        case 17:
+                            output = "Balance: 1000";
+                            break;
+                        case 18:
+                            output = "I can eat!\nI can bark! Woof woof!";
+                            break;
+                        case 19:
+                            output = "Drawing a circle";
+                            break;
+                        case 20:
+                            output = "Book: The C++ Programming Language by Bjarne Stroustrup";
+                            break;
+                        case 21:
+                            output = "Numbers: 10 20 30";
+                            break;
+                        case 22:
+                            output = "Bob's age: 25";
+                            break;
+                        case 23:
+                            output = "Sorted numbers: 1 3 4 5 8";
+                            break;
+                        case 24:
+                            output = "Top element: 30\nTop element after pop: 20";
+                            break;
+                        case 25:
+                            output = "Elements: 10 20 30";
+                            break;
+                        case 26:
+                            output = "Factorial of 5: 120";
+                            break;
+                        case 27:
+                            output = "0 1 3 4";
+                            break;
+                        case 28:
+                            output = "Max: 100\nMin: 0\nSize: 100";
+                            break;
+                        case 29:
+                            output = "Drawing a circle";
+                            break;
+                        case 30:
+                            output = "Name: Alice, Age: 30";
                             break;
                         default:
                             output = "Program executed successfully!";
