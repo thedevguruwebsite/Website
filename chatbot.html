@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/logo.png">
+    <title>The Dev Guru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-robot"></i> The Dev Guru</h1>
+        <p>Explore The Dev Guru projects with this interactive assistant</p>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <i class="fas fa-code"></i> Project Assistant - Ask about any project
+                <a href="index.html"><button class="suggestion-btn"><i class="fas fa-home"></i> Go To Home</button></a>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    <i class="fas fa-robot"></i> Hello! I'm your Project Assistant. You can ask about any project or repository. Try saying:
+                    <div class="suggestions">
+                        <button class="suggestion-btn" data-command="show-projects"><i class="fas fa-list"></i> Show Projects</button>
+                        <button class="suggestion-btn" data-command="nginx-deployer"><i class="fab fa-github"></i> Nginx Deployer</button>
+                        <button class="suggestion-btn" data-command="number-converter"><i class="fab fa-github"></i> Number Converter</button>
+                        <button class="suggestion-btn" data-command="subnet-calculator"><i class="fab fa-github"></i> Subnet Calculator</button>
+                    </div>
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Live Demos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Open Source</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type project name (e.g. 'Nginx deployer')" autocomplete="off">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
