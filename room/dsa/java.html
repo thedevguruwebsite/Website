@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java DSA Master - 100 Hard Problems</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a2a3a;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --expert: #9b59b6;
+            --sidebar-width: 300px;
+            --header-height: 60px;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(13, 27, 42, 0.95);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .logo i {
+            color: var(--secondary);
+            animation: pulse 2s infinite;
+        }
+        
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: auto;
+            display: block;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 39, 59, 0.95);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            overflow-y: auto;
+            padding: 15px 0;
+            transition: transform 0.3s ease;
+            z-index: 90;
+            border-right: 1px solid rgba(52, 152, 219, 0.2);
+            backdrop-filter: blur(5px);
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .topic-list {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .topic-list.expanded {
+            max-height: 1000px;
+        }
+        
+        .topic-item {
+            padding: 10px 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .topic-item:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .topic-item.active {
+            background: rgba(52, 152, 219, 0.15);
+            border-left: 3px solid var(--secondary);
+            color: white;
+        }
+        
+        .difficulty-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            right: 20px;
+        }
+        
+        .dot-easy { background: var(--success); }
+        .dot-medium { background: var(--warning); }
+        .dot-hard { background: var(--accent); }
+        .dot-expert { background: var(--expert); }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: calc(var(--header-height) + 20px) 15px 30px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .problem-header {
+            background: rgba(26, 39, 59, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .problem-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .difficulty.easy {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .difficulty.medium {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+        
+        .difficulty.hard {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        
+        .difficulty.expert {
+            background: rgba(155, 89, 182, 0.2);
+            color: var(--expert);
+            border: 1px solid var(--expert);
+        }
+        
+        .problem-description {
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: #dcdde1;
+            font-size: 1rem;
+        }
+        
+        .problem-example {
+            background: rgba(33, 47, 69, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Fira Code', monospace;
+            border-left: 4px solid var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .work-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .code-editor, .output-section {
+            background: rgba(26, 39, 59, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .editor-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+        
+        .editor-container {
+            flex: 1;
+            background: #1e2838;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        #codeEditor {
+            width: 100%;
+            height: 100%;
+            background: #1e2838;
+            color: #f8f8f2;
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            border: none;
+            resize: none;
+            outline: none;
+            line-height: 1.6;
+            tab-size: 4;
+        }
+        
+        .output-content {
+            flex: 1;
+            background: #1e2838;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            color: #f8f8f2;
+            white-space: pre-wrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+        }
+        
+        .output-line {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .output-line.success {
+            color: var(--success);
+        }
+        
+        .output-line.error {
+            color: var(--accent);
+        }
+        
+        .hints-section {
+            background: rgba(26, 39, 59, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .hint {
+            background: rgba(33, 47, 69, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .hint-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--warning);
+            font-size: 1rem;
+        }
+        
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            width: 35%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .problem-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .problem-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .problem-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .category-tag {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(52, 152, 219, 0.5);
+        }
+        
+        .problem-number {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        
+        /* Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        /* Responsive Styles */
+        @media (min-width: 576px) {
+            .problem-nav {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 9px 18px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0);
+                position: fixed;
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-width);
+                padding: calc(var(--header-height) + 20px) 30px 30px 30px;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+            
+            .problem-title {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .problem-nav {
+                flex-direction: row;
+            }
+            
+            .progress-section {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .work-area {
+                flex-direction: row;
+            }
+            
+            .code-editor, .output-section {
+                flex: 1;
+                min-height: 400px;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .code-editor, .output-section {
+                min-height: 500px;
+            }
+        }
+        
+        /* Special responsive adjustments for code blocks */
+        pre, code {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <span>Java DSA Master - 100 Hard Problems</span>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title" id="arrayTitle">
+                    <i class="fas fa-bars"></i>
+                    Hard Arrays (15)
+                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                </div>
+                <ul class="topic-list" id="arrayList">
+                    <li class="topic-item active" data-problem="0">
+                        <i class="fas fa-arrow-right"></i>
+                        1. Trapping Rain Water 3D
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="1">
+                        <i class="fas fa-arrow-right"></i>
+                        2. Sliding Window Maximum
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="2">
+                        <i class="fas fa-arrow-right"></i>
+                        3. Median of Two Sorted Arrays
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="3">
+                        <i class="fas fa-arrow-right"></i>
+                        4. First Missing Positive
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="4">
+                        <i class="fas fa-arrow-right"></i>
+                        5. Largest Rectangle in Histogram
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="5">
+                        <i class="fas fa-arrow-right"></i>
+                        6. Merge k Sorted Arrays
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="6">
+                        <i class="fas fa-arrow-right"></i>
+                        7. Longest Consecutive Sequence
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="7">
+                        <i class="fas fa-arrow-right"></i>
+                        8. Container With Most Water
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="8">
+                        <i class="fas fa-arrow-right"></i>
+                        9. Jump Game IV
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="9">
+                        <i class="fas fa-arrow-right"></i>
+                        10. Candy Distribution
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="10">
+                        <i class="fas fa-arrow-right"></i>
+                        11. Maximum Gap
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="11">
+                        <i class="fas fa-arrow-right"></i>
+                        12. Find Peak Element II
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="12">
+                        <i class="fas fa-arrow-right"></i>
+                        13. Shortest Unsorted Continuous Subarray
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="13">
+                        <i class="fas fa-arrow-right"></i>
+                        14. Minimum Operations to Reduce X to Zero
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="14">
+                        <i class="fas fa-arrow-right"></i>
+                        15. Count of Range Sum
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title" id="stringTitle">
+                    <i class="fas fa-font"></i>
+                    Hard Strings (15)
+                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                </div>
+                <ul class="topic-list" id="stringList">
+                    <li class="topic-item" data-problem="15">
+                        <i class="fas fa-arrow-right"></i>
+                        16. Regular Expression Matching
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="16">
+                        <i class="fas fa-arrow-right"></i>
+                        17. Wildcard Matching
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="17">
+                        <i class="fas fa-arrow-right"></i>
+                        18. Longest Valid Parentheses
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="18">
+                        <i class="fas fa-arrow-right"></i>
+                        19. Minimum Window Substring
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="19">
+                        <i class="fas fa-arrow-right"></i>
+                        20. Substring Concatenation
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="20">
+                        <i class="fas fa-arrow-right"></i>
+                        21. Word Break II
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="21">
+                        <i class="fas fa-arrow-right"></i>
+                        22. Text Justification
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="22">
+                        <i class="fas fa-arrow-right"></i>
+                        23. Palindrome Partitioning II
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="23">
+                        <i class="fas fa-arrow-right"></i>
+                        24. Scramble String
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="24">
+                        <i class="fas fa-arrow-right"></i>
+                        25. Minimum Window Subsequence
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="25">
+                        <i class="fas fa-arrow-right"></i>
+                        26. Basic Calculator III
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="26">
+                        <i class="fas fa-arrow-right"></i>
+                        27. Integer to English Words
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="27">
+                        <i class="fas fa-arrow-right"></i>
+                        28. Distinct Subsequences II
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="28">
+                        <i class="fas fa-arrow-right"></i>
+                        29. String Transforms
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="29">
+                        <i class="fas fa-arrow-right"></i>
+                        30. Longest Chunked Palindrome
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title" id="dpTitle">
+                    <i class="fas fa-sitemap"></i>
+                    Hard DP (15)
+                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                </div>
+                <ul class="topic-list" id="dpList">
+                    <li class="topic-item" data-problem="30">
+                        <i class="fas fa-arrow-right"></i>
+                        31. Burst Balloons
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="31">
+                        <i class="fas fa-arrow-right"></i>
+                        32. Cherry Pickup
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="32">
+                        <i class="fas fa-arrow-right"></i>
+                        33. Minimum Cost to Merge Stones
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="33">
+                        <i class="fas fa-arrow-right"></i>
+                        34. Count Palindromic Subsequences
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="34">
+                        <i class="fas fa-arrow-right"></i>
+                        35. Frog Jump
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="35">
+                        <i class="fas fa-arrow-right"></i>
+                        36. Maximum Profit Job Scheduling
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="36">
+                        <i class="fas fa-arrow-right"></i>
+                        37. Minimum Difficulty Job Schedule
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="37">
+                        <i class="fas fa-arrow-right"></i>
+                        38. Strange Printer
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="38">
+                        <i class="fas fa-arrow-right"></i>
+                        39. Tallest Billboard
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="39">
+                        <i class="fas fa-arrow-right"></i>
+                        40. Paint House III
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="40">
+                        <i class="fas fa-arrow-right"></i>
+                        41. Minimum Insertion Steps
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="41">
+                        <i class="fas fa-arrow-right"></i>
+                        42. Number of Ways to Paint Grid
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="42">
+                        <i class="fas fa-arrow-right"></i>
+                        43. Minimum Skips to Arrive on Time
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="43">
+                        <i class="fas fa-arrow-right"></i>
+                        44. Count Vowels Permutation
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="44">
+                        <i class="fas fa-arrow-right"></i>
+                        45. Reducing Dishes
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title" id="graphTitle">
+                    <i class="fas fa-project-diagram"></i>
+                    Hard Graphs (15)
+                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                </div>
+                <ul class="topic-list" id="graphList">
+                    <li class="topic-item" data-problem="45">
+                        <i class="fas fa-arrow-right"></i>
+                        46. Word Ladder II
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="46">
+                        <i class="fas fa-arrow-right"></i>
+                        47. Alien Dictionary
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="47">
+                        <i class="fas fa-arrow-right"></i>
+                        48. Swim in Rising Water
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="48">
+                        <i class="fas fa-arrow-right"></i>
+                        49. Sliding Puzzle
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="49">
+                        <i class="fas fa-arrow-right"></i>
+                        50. Bus Routes
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="50">
+                        <i class="fas fa-arrow-right"></i>
+                        51. Critical Connections
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="51">
+                        <i class="fas fa-arrow-right"></i>
+                        52. Cheapest Flights Within K Stops
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="52">
+                        <i class="fas fa-arrow-right"></i>
+                        53. Reconstruct Itinerary
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="53">
+                        <i class="fas fa-arrow-right"></i>
+                        54. Minimum Height Trees
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="54">
+                        <i class="fas fa-arrow-right"></i>
+                        55. Shortest Path with Obstacles
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="55">
+                        <i class="fas fa-arrow-right"></i>
+                        56. Network Delay Time
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="56">
+                        <i class="fas fa-arrow-right"></i>
+                        57. Parallel Courses
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="57">
+                        <i class="fas fa-arrow-right"></i>
+                        58. Minimum Refueling Stops
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="58">
+                        <i class="fas fa-arrow-right"></i>
+                        59. Find the City
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="59">
+                        <i class="fas fa-arrow-right"></i>
+                        60. Path with Maximum Probability
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title" id="treeTitle">
+                    <i class="fas fa-tree"></i>
+                    Hard Trees (15)
+                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                </div>
+                <ul class="topic-list" id="treeList">
+                    <li class="topic-item" data-problem="60">
+                        <i class="fas fa-arrow-right"></i>
+                        61. Serialize and Deserialize BST
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="61">
+                        <i class="fas fa-arrow-right"></i>
+                        62. Binary Tree Cameras
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="62">
+                        <i class="fas fa-arrow-right"></i>
+                        63. Recover BST
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="63">
+                        <i class="fas fa-arrow-right"></i>
+                        64. Sum of Distances in Tree
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="64">
+                        <i class="fas fa-arrow-right"></i>
+                        65. Vertical Order Traversal
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="65">
+                        <i class="fas fa-arrow-right"></i>
+                        66. Closest Leaf in Binary Tree
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="66">
+                        <i class="fas fa-arrow-right"></i>
+                        67. Delete Nodes And Return Forest
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="67">
+                        <i class="fas fa-arrow-right"></i>
+                        68. Lowest Common Ancestor Deepest Leaves
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="68">
+                        <i class="fas fa-arrow-right"></i>
+                        69. Maximum Difference Between Node and Ancestor
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="69">
+                        <i class="fas fa-arrow-right"></i>
+                        70. Distribute Coins in Binary Tree
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="70">
+                        <i class="fas fa-arrow-right"></i>
+                        71. Longest Univalue Path
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="71">
+                        <i class="fas fa-arrow-right"></i>
+                        72. Construct Tree from Preorder and Postorder
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="72">
+                        <i class="fas fa-arrow-right"></i>
+                        73. Path Sum IV
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="73">
+                        <i class="fas fa-arrow-right"></i>
+                        74. Smallest Subtree with Deepest Nodes
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                    <li class="topic-item" data-problem="74">
+                        <i class="fas fa-arrow-right"></i>
+                        75. Binary Tree Maximum Path Sum
+                        <span class="difficulty-dot dot-hard"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title" id="advancedTitle">
+                    <i class="fas fa-rocket"></i>
+                    Expert Problems (20)
+                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                </div>
+                <ul class="topic-list" id="advancedList">
+                    <li class="topic-item" data-problem="75">
+                        <i class="fas fa-arrow-right"></i>
+                        76. N-Queens II
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="76">
+                        <i class="fas fa-arrow-right"></i>
+                        77. Sudoku Solver
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="77">
+                        <i class="fas fa-arrow-right"></i>
+                        78. Expression Add Operators
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="78">
+                        <i class="fas fa-arrow-right"></i>
+                        79. Word Search II
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="79">
+                        <i class="fas fa-arrow-right"></i>
+                        80. Russian Doll Envelopes
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="80">
+                        <i class="fas fa-arrow-right"></i>
+                        81. LFU Cache
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="81">
+                        <i class="fas fa-arrow-right"></i>
+                        82. Design In-Memory File System
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="82">
+                        <i class="fas fa-arrow-right"></i>
+                        83. Robot Room Cleaner
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="83">
+                        <i class="fas fa-arrow-right"></i>
+                        84. Optimal Account Balancing
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="84">
+                        <i class="fas fa-arrow-right"></i>
+                        85. The Skyline Problem
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="85">
+                        <i class="fas fa-arrow-right"></i>
+                        86. Kth Smallest in Sorted Matrix
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="86">
+                        <i class="fas fa-arrow-right"></i>
+                        87. Range Sum Query 2D - Mutable
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="87">
+                        <i class="fas fa-arrow-right"></i>
+                        88. Minimum Arrows to Burst Balloons
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="88">
+                        <i class="fas fa-arrow-right"></i>
+                        89. Maximum Frequency Stack
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="89">
+                        <i class="fas fa-arrow-right"></i>
+                        90. Find Median from Data Stream
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="90">
+                        <i class="fas fa-arrow-right"></i>
+                        91. Minimum Cost to Connect Sticks
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="91">
+                        <i class="fas fa-arrow-right"></i>
+                        92. Minimum Deletions to Make Valid Sequence
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="92">
+                        <i class="fas fa-arrow-right"></i>
+                        93. Design Search Autocomplete System
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="93">
+                        <i class="fas fa-arrow-right"></i>
+                        94. Shortest Path in Hidden Graph
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="94">
+                        <i class="fas fa-arrow-right"></i>
+                        95. Minimum Operations to Make Subsequence
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="95">
+                        <i class="fas fa-arrow-right"></i>
+                        96. Minimum Number of Increments
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="96">
+                        <i class="fas fa-arrow-right"></i>
+                        97. Maximum Number of Non-Overlapping Substrings
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="97">
+                        <i class="fas fa-arrow-right"></i>
+                        98. Minimum Cost to Cut a Stick
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="98">
+                        <i class="fas fa-arrow-right"></i>
+                        99. Reconstruct Itinerary II
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                    <li class="topic-item" data-problem="99">
+                        <i class="fas fa-arrow-right"></i>
+                        100. Swim in Rising Water II
+                        <span class="difficulty-dot dot-expert"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    <i class="fas fa-trophy"></i>
+                    Progress Tracker
+                </div>
+                <div style="padding: 0 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Solved Problems:</span>
+                        <span id="solvedCount">0/100</span>
+                    </div>
+                    <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px;">
+                        <div id="solvedProgress" style="height: 100%; width: 0%; background: var(--success); border-radius: 4px; transition: width 0.5s ease;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Problem Header -->
+            <div class="problem-header fade-in">
+                <h1 class="problem-title">
+                    <span class="problem-number">#1</span>
+                    <span id="problemName">Trapping Rain Water 3D</span>
+                    <span class="expert-badge" id="expertBadge">HARD</span>
+                </h1>
+                <div class="difficulty hard" id="difficultyLabel">Hard</div>
+                <div class="problem-categories">
+                    <span class="category-tag">Array</span>
+                    <span class="category-tag">Heap</span>
+                    <span class="category-tag">BFS</span>
+                </div>
+                <p class="problem-description" id="problemDescription">
+                    Given an m x n matrix of positive integers representing the height of each unit cell in a 3D elevation map, compute the volume of water it is able to trap after raining. Water can only flow in four directions (up, down, left, right) to boundary cells.
+                </p>
+                <div class="problem-example" id="problemExample">
+                    <strong>Example:</strong><br>
+                    Input: heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]<br>
+                    Output: 4<br>
+                    Explanation: After rain, water is trapped between the blocks. We have two small ponds (1 index unit and 3 index units) trapped.
+                </div>
+                
+                <div class="problem-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Time: <span id="timeComplexity">O(mn log(mn))</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-database"></i>
+                        <span>Space: <span id="spaceComplexity">O(mn)</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Test Cases: <span id="testCases">8</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-fire"></i>
+                        <span>Acceptance: <span id="acceptance">32%</span></span>
+                    </div>
+                </div>
+                
+                <div class="complexity-chart">
+                    <div class="complexity-bar time-bar" id="timeBar"></div>
+                    <div class="complexity-bar space-bar" id="spaceBar"></div>
+                </div>
+                <div class="complexity-labels">
+                    <span>Time Complexity</span>
+                    <span>Space Complexity</span>
+                </div>
+            </div>
+            
+            <!-- Work Area -->
+            <div class="work-area">
+                <!-- Code Editor -->
+                <div class="code-editor fade-in">
+                    <div class="section-title">
+                        <div class="editor-header">
+                            <i class="fab fa-java"></i>
+                            <h2>Java Editor</h2>
+                        </div>
+                        <div class="editor-actions">
+                            <button class="btn btn-warning" id="hintBtn">
+                                <i class="fas fa-lightbulb"></i> Hint
+                            </button>
+                            <button class="btn btn-primary" id="runBtn">
+                                <i class="fas fa-play"></i> Run Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-container">
+                        <textarea id="codeEditor">import java.util.*;
+
+public class Solution {
+    public int trapRainWater(int[][] heightMap) {
+        if (heightMap == null || heightMap.length == 0 || heightMap[0].length == 0) 
+            return 0;
+        
+        int m = heightMap.length;
+        int n = heightMap[0].length;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[2] - b[2]);
+        boolean[][] visited = new boolean[m][n];
+        
+        // Add boundary cells to the priority queue
+        for (int i = 0; i < m; i++) {
+            pq.offer(new int[]{i, 0, heightMap[i][0]});
+            visited[i][0] = true;
+            pq.offer(new int[]{i, n-1, heightMap[i][n-1]});
+            visited[i][n-1] = true;
+        }
+        for (int j = 1; j < n-1; j++) {
+            pq.offer(new int[]{0, j, heightMap[0][j]});
+            visited[0][j] = true;
+            pq.offer(new int[]{m-1, j, heightMap[m-1][j]});
+            visited[m-1][j] = true;
+        }
+        
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int totalWater = 0;
+        int maxHeight = 0;
+        
+        while (!pq.isEmpty()) {
+            int[] cell = pq.poll();
+            int row = cell[0], col = cell[1], height = cell[2];
+            maxHeight = Math.max(maxHeight, height);
+            
+            for (int[] dir : dirs) {
+                int newRow = row + dir[0];
+                int newCol = col + dir[1];
+                
+                if (newRow < 0 || newRow >= m || newCol < 0 || newCol >= n || visited[newRow][newCol]) 
+                    continue;
+                
+                visited[newRow][newCol] = true;
+                if (heightMap[newRow][newCol] < maxHeight) {
+                    totalWater += maxHeight - heightMap[newRow][newCol];
+                }
+                
+                pq.offer(new int[]{newRow, newCol, heightMap[newRow][newCol]});
+            }
+        }
+        
+        return totalWater;
+    }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[][] heightMap = {
+            {1,4,3,1,3,2},
+            {3,2,1,3,2,4},
+            {2,3,3,2,3,1}
+        };
+        System.out.println(sol.trapRainWater(heightMap)); // Output: 4
+    }
+}</textarea>
+                    </div>
+                </div>
+                
+                <!-- Output Section -->
+                <div class="output-section fade-in">
+                    <div class="section-title">
+                        <div class="editor-header">
+                            <i class="fas fa-terminal"></i>
+                            <h2>Output</h2>
+                        </div>
+                        <button class="btn btn-success" id="submitBtn">
+                            <i class="fas fa-check"></i> Submit Solution
+                        </button>
+                    </div>
+                    <div class="output-content" id="outputContent">
+                        <div class="output-line">// Problem #1: Trapping Rain Water 3D</div>
+                        <div class="output-line">// Click "Run Code" to test your solution</div>
+                        <div class="output-line">// Output will appear here after execution</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hints Section -->
+            <div class="hints-section fade-in">
+                <h2><i class="fas fa-lightbulb"></i> Solution Approach</h2>
+                <div class="hint">
+                    <div class="hint-title">
+                        <i class="fas fa-flask"></i>
+                        <strong>Optimal Approach: Priority Queue + BFS</strong>
+                    </div>
+                    <p>This problem requires a priority queue to simulate the process of water trapping from boundaries to inner cells. The key insight is that the water height at each cell is determined by the minimum height of its boundary.</p>
+                    <ol>
+                        <li>Add all boundary cells to a min-heap</li>
+                        <li>Process cells in increasing height order</li>
+                        <li>For each cell, update the max boundary height</li>
+                        <li>For unvisited neighbors, calculate trapped water</li>
+                        <li>Add neighbors to the heap for processing</li>
+                    </ol>
+                </div>
+                
+                <div class="hint">
+                    <div class="hint-title">
+                        <i class="fas fa-brain"></i>
+                        <strong>Complexity Analysis</strong>
+                    </div>
+                    <p>Time Complexity: O(mn log(mn)) - Each cell is processed once, and heap operations take log time<br>
+                    Space Complexity: O(mn) - For storing visited cells and the priority queue</p>
+                </div>
+                
+                <div class="progress-section">
+                    <div>Learning Progress:</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="learningProgress"></div>
+                    </div>
+                    <div id="progressPercent">0%</div>
+                </div>
+            </div>
+            
+            <div class="problem-nav">
+                <button class="btn btn-primary" id="prevBtn">
+                    <i class="fas fa-arrow-left"></i> Previous Problem
+                </button>
+                <button class="btn btn-primary" id="nextBtn">
+                    Next Problem <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Problem set data (100 hard problems)
+        const problems = Array.from({ length: 100 }, (_, i) => {
+            const difficulties = [
+                ...Array(75).fill('hard'),
+                ...Array(25).fill('expert')
+            ];
+            
+            const categories = [
+                ...Array(15).fill('Array'),
+                ...Array(15).fill('String'),
+                ...Array(15).fill('Dynamic Programming'),
+                ...Array(15).fill('Graph'),
+                ...Array(15).fill('Tree'),
+                ...Array(25).fill('Advanced')
+            ];
+            
+            const acceptanceRates = [
+                ...Array(100).fill((35 - Math.floor(i/3)) + '%')
+            ];
+            
+            const problemNames = [
+                "Trapping Rain Water 3D", "Sliding Window Maximum", "Median of Two Sorted Arrays", "First Missing Positive", "Largest Rectangle in Histogram",
+                "Merge k Sorted Arrays", "Longest Consecutive Sequence", "Container With Most Water", "Jump Game IV", "Candy Distribution",
+                "Maximum Gap", "Find Peak Element II", "Shortest Unsorted Continuous Subarray", "Minimum Operations to Reduce X to Zero", "Count of Range Sum",
+                "Regular Expression Matching", "Wildcard Matching", "Longest Valid Parentheses", "Minimum Window Substring", "Substring Concatenation",
+                "Word Break II", "Text Justification", "Palindrome Partitioning II", "Scramble String", "Minimum Window Subsequence",
+                "Basic Calculator III", "Integer to English Words", "Distinct Subsequences II", "String Transforms", "Longest Chunked Palindrome",
+                "Burst Balloons", "Cherry Pickup", "Minimum Cost to Merge Stones", "Count Palindromic Subsequences", "Frog Jump",
+                "Maximum Profit Job Scheduling", "Minimum Difficulty Job Schedule", "Strange Printer", "Tallest Billboard", "Paint House III",
+                "Minimum Insertion Steps", "Number of Ways to Paint Grid", "Minimum Skips to Arrive on Time", "Count Vowels Permutation", "Reducing Dishes",
+                "Word Ladder II", "Alien Dictionary", "Swim in Rising Water", "Sliding Puzzle", "Bus Routes",
+                "Critical Connections", "Cheapest Flights Within K Stops", "Reconstruct Itinerary", "Minimum Height Trees", "Shortest Path with Obstacles",
+                "Network Delay Time", "Parallel Courses", "Minimum Refueling Stops", "Find the City", "Path with Maximum Probability",
+                "Serialize and Deserialize BST", "Binary Tree Cameras", "Recover BST", "Sum of Distances in Tree", "Vertical Order Traversal",
+                "Closest Leaf in Binary Tree", "Delete Nodes And Return Forest", "Lowest Common Ancestor Deepest Leaves", "Maximum Difference Between Node and Ancestor", "Distribute Coins in Binary Tree",
+                "Longest Univalue Path", "Construct Tree from Preorder and Postorder", "Path Sum IV", "Smallest Subtree with Deepest Nodes", "Binary Tree Maximum Path Sum",
+                "N-Queens II", "Sudoku Solver", "Expression Add Operators", "Word Search II", "Russian Doll Envelopes",
+                "LFU Cache", "Design In-Memory File System", "Robot Room Cleaner", "Optimal Account Balancing", "The Skyline Problem",
+                "Kth Smallest in Sorted Matrix", "Range Sum Query 2D - Mutable", "Minimum Arrows to Burst Balloons", "Maximum Frequency Stack", "Find Median from Data Stream",
+                "Minimum Cost to Connect Sticks", "Minimum Deletions to Make Valid Sequence", "Design Search Autocomplete System", "Shortest Path in Hidden Graph", "Minimum Operations to Make Subsequence",
+                "Minimum Number of Increments", "Maximum Number of Non-Overlapping Substrings", "Minimum Cost to Cut a Stick", "Reconstruct Itinerary II", "Swim in Rising Water II"
+            ];
+            
+            const descriptions = [
+                "Compute trapped water volume in a 3D elevation map",
+                "Find max in each sliding window with constraints",
+                "Find median of two sorted arrays in O(log(min(m,n)))",
+                "Find smallest missing positive integer in unsorted array",
+                "Compute largest rectangle area under histogram",
+                "Merge k sorted arrays into one sorted array efficiently",
+                "Find longest consecutive elements sequence length",
+                "Find two lines that form container with most water",
+                "Reach last index with minimum jumps using BFS",
+                "Distribute candies to children satisfying rating constraints",
+                "Find maximum gap between elements in sorted form",
+                "Find any peak element in a 2D matrix",
+                "Find shortest unsorted continuous subarray",
+                "Minimize operations to reduce x to exactly zero",
+                "Count number of range sums in given interval",
+                "Implement regular expression matching with '.' and '*'",
+                "Implement wildcard pattern matching with '?' and '*'",
+                "Find longest valid parentheses substring length",
+                "Find minimum window containing all characters of another string",
+                "Find starting indices of substring concatenations",
+                "Return all possible word break combinations",
+                "Format text with max width per line",
+                "Minimize cuts to partition string into palindromic substrings",
+                "Determine if two strings are scrambled forms of each other",
+                "Find minimum window in S containing T as subsequence",
+                "Evaluate expression string containing parentheses and operators",
+                "Convert non-negative integer to English words representation",
+                "Count distinct subsequences of S equal to T",
+                "Check if string can be transformed using given operations",
+                "Find longest palindromic substring decomposition",
+                "Maximize coins by bursting balloons in optimal order",
+                "Collect maximum cherries with two traversals",
+                "Minimize cost to merge stones into one pile",
+                "Count distinct palindromic subsequences",
+                "Determine if frog can cross river with jumps",
+                "Schedule jobs to maximize profit with deadlines",
+                "Find minimum difficulty of job schedule over d days",
+                "Find minimum steps for strange printer",
+                "Build tallest possible billboard with two supports",
+                "Paint houses with minimal cost and constraints",
+                "Minimize insertions to make string palindrome",
+                "Count ways to paint grid with no adjacent same color",
+                "Minimize skips to arrive on time for meetings",
+                "Count vowel permutation sequences of length n",
+                "Maximize satisfaction by preparing dishes in order",
+                "Find all shortest transformation sequences between words",
+                "Determine alien language character order",
+                "Find minimum time to reach bottom-right cell",
+                "Solve sliding puzzle to reach target state",
+                "Find least number of buses to reach destination",
+                "Find critical connections in a network (Tarjan's)",
+                "Find cheapest flights within k stops",
+                "Reconstruct itinerary using all tickets",
+                "Find roots of minimum height trees",
+                "Find shortest path with obstacle elimination",
+                "Find time for all nodes to receive signal",
+                "Find minimum semesters to complete all courses",
+                "Find minimum refueling stops to reach destination",
+                "Find city with smallest number of reachable cities",
+                "Find path with maximum probability of success",
+                "Serialize and deserialize binary search tree",
+                "Minimize cameras to monitor all tree nodes",
+                "Recover BST with two swapped nodes",
+                "Compute sum of distances between all tree nodes",
+                "Traverse binary tree vertically",
+                "Find closest leaf node to given node",
+                "Delete nodes returning forest of trees",
+                "Find lowest common ancestor of deepest leaves",
+                "Find max difference between node and ancestor",
+                "Distribute coins so every node has exactly one",
+                "Find longest path where all values are same",
+                "Construct binary tree from preorder and postorder",
+                "Compute path sum in integer tree representation",
+                "Find smallest subtree with all deepest nodes",
+                "Find maximum path sum in binary tree",
+                "Count distinct solutions for n-queens puzzle",
+                "Solve Sudoku puzzle by filling empty cells",
+                "Insert operators to evaluate to target value",
+                "Find all words from dictionary in character grid",
+                "Maximize nested Russian dolls envelopes",
+                "Design and implement LFU cache",
+                "Design in-memory file system structure",
+                "Clean room with robot API",
+                "Minimize transactions to settle all debts",
+                "Compute skyline of buildings",
+                "Find kth smallest element in sorted matrix",
+                "Support range sum queries with updates",
+                "Find minimum arrows to burst balloons",
+                "Design stack with most frequent element access",
+                "Find median from streaming numbers",
+                "Minimize cost to connect sticks",
+                "Minimize deletions to make parentheses valid",
+                "Design search autocomplete system",
+                "Find shortest path in hidden graph",
+                "Minimize operations to make target subsequence",
+                "Minimize increments to make array unique",
+                "Find maximum non-overlapping substrings",
+                "Minimize cost to cut a stick",
+                "Reconstruct itinerary with duplicate tickets",
+                "Find minimum time to swim to bottom-right cell"
+            ];
+            
+            return {
+                id: i,
+                name: problemNames[i],
+                description: descriptions[i],
+                difficulty: difficulties[i],
+                example: `<strong>Example:</strong><br>${getExample(i)}`,
+                timeComplexity: getTimeComplexity(i),
+                spaceComplexity: getSpaceComplexity(i),
+                testCases: Math.floor(Math.random() * 10) + 5,
+                acceptance: acceptanceRates[i],
+                categories: [categories[i], getSecondaryCategory(i)],
+                code: getStarterCode(i)
+            };
+            
+            function getExample(i) {
+                return `Input: Sample input for ${problemNames[i]}<br>Output: Expected output<br>Explanation: Detailed explanation of the solution approach.`;
+            }
+            
+            function getTimeComplexity(i) {
+                if (i < 20) return "O(n)";
+                if (i < 40) return "O(n log n)";
+                if (i < 70) return "O(n²)";
+                if (i < 90) return "O(n³)";
+                return "O(2^n)";
+            }
+            
+            function getSpaceComplexity(i) {
+                if (i < 30) return "O(1)";
+                if (i < 60) return "O(n)";
+                if (i < 80) return "O(n²)";
+                return "O(n³)";
+            }
+            
+            function getSecondaryCategory(i) {
+                const categories = [
+                    "Heap", "BFS", "DFS", "DP", "Trie", 
+                    "Backtracking", "Greedy", "Union Find", "Memoization", "Two Pointers"
+                ];
+                return categories[i % categories.length];
+            }
+            
+            function getStarterCode(i) {
+                return `import java.util.*;\n\npublic class Solution {\n    public ${i > 79 ? 'int' : 'void'} ${problemNames[i].replace(/\s+/g, '')}() {\n        // Your solution for ${problemNames[i]}\n        ${i > 79 ? 'return 0;' : ''}\n    }\n    \n    public static void main(String[] args) {\n        Solution sol = new Solution();\n        ${i > 79 ? 'System.out.println(sol.' + problemNames[i].replace(/\s+/g, '') + '());' : 'sol.' + problemNames[i].replace(/\s+/g, '') + '();'}\n    }\n}`;
+            }
+        });
+
+        // Set specific data for first problem
+        problems[0] = {
+            id: 0,
+            name: "Trapping Rain Water 3D",
+            difficulty: "hard",
+            description: "Given an m x n matrix of positive integers representing the height of each unit cell in a 3D elevation map, compute the volume of water it is able to trap after raining. Water can only flow in four directions (up, down, left, right) to boundary cells.",
+            example: "<strong>Example:</strong><br>Input: heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]<br>Output: 4<br>Explanation: After rain, water is trapped between the blocks. We have two small ponds (1 index unit and 3 index units) trapped.",
+            timeComplexity: "O(mn log(mn))",
+            spaceComplexity: "O(mn)",
+            testCases: 8,
+            acceptance: "32%",
+            categories: ["Array", "Heap", "BFS"],
+            code: `import java.util.*;
+
+public class Solution {
+    public int trapRainWater(int[][] heightMap) {
+        if (heightMap == null || heightMap.length == 0 || heightMap[0].length == 0) 
+            return 0;
+        
+        int m = heightMap.length;
+        int n = heightMap[0].length;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[2] - b[2]);
+        boolean[][] visited = new boolean[m][n];
+        
+        // Add boundary cells to the priority queue
+        for (int i = 0; i < m; i++) {
+            pq.offer(new int[]{i, 0, heightMap[i][0]});
+            visited[i][0] = true;
+            pq.offer(new int[]{i, n-1, heightMap[i][n-1]});
+            visited[i][n-1] = true;
+        }
+        for (int j = 1; j < n-1; j++) {
+            pq.offer(new int[]{0, j, heightMap[0][j]});
+            visited[0][j] = true;
+            pq.offer(new int[]{m-1, j, heightMap[m-1][j]});
+            visited[m-1][j] = true;
+        }
+        
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int totalWater = 0;
+        int maxHeight = 0;
+        
+        while (!pq.isEmpty()) {
+            int[] cell = pq.poll();
+            int row = cell[0], col = cell[1], height = cell[2];
+            maxHeight = Math.max(maxHeight, height);
+            
+            for (int[] dir : dirs) {
+                int newRow = row + dir[0];
+                int newCol = col + dir[1];
+                
+                if (newRow < 0 || newRow >= m || newCol < 0 || newCol >= n || visited[newRow][newCol]) 
+                    continue;
+                
+                visited[newRow][newCol] = true;
+                if (heightMap[newRow][newCol] < maxHeight) {
+                    totalWater += maxHeight - heightMap[newRow][newCol];
+                }
+                
+                pq.offer(new int[]{newRow, newCol, heightMap[newRow][newCol]});
+            }
+        }
+        
+        return totalWater;
+    }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[][] heightMap = {
+            {1,4,3,1,3,2},
+            {3,2,1,3,2,4},
+            {2,3,3,2,3,1}
+        };
+        System.out.println(sol.trapRainWater(heightMap)); // Output: 4
+    }
+}`
+        };
+
+        // Current problem index
+        let currentProblemIndex = 0;
+        let solvedProblems = 0;
+        let learningProgress = 0;
+        
+        // DOM Elements
+        const problemNameEl = document.getElementById('problemName');
+        const difficultyLabel = document.getElementById('difficultyLabel');
+        const problemDescriptionEl = document.getElementById('problemDescription');
+        const problemExampleEl = document.getElementById('problemExample');
+        const timeComplexityEl = document.getElementById('timeComplexity');
+        const spaceComplexityEl = document.getElementById('spaceComplexity');
+        const testCasesEl = document.getElementById('testCases');
+        const acceptanceEl = document.getElementById('acceptance');
+        const codeEditorEl = document.getElementById('codeEditor');
+        const outputContentEl = document.getElementById('outputContent');
+        const solvedCountEl = document.getElementById('solvedCount');
+        const solvedProgressEl = document.getElementById('solvedProgress');
+        const learningProgressEl = document.getElementById('learningProgress');
+        const progressPercentEl = document.getElementById('progressPercent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const runBtn = document.getElementById('runBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const hintBtn = document.getElementById('hintBtn');
+        const topicItems = document.querySelectorAll('.topic-item');
+        const expertBadge = document.getElementById('expertBadge');
+        const timeBar = document.getElementById('timeBar');
+        const spaceBar = document.getElementById('spaceBar');
+        
+        // Initialize the platform
+        function init() {
+            loadProblem(currentProblemIndex);
+            setupEventListeners();
+            updateProgress();
+            setupSidebarToggles();
+        }
+        
+        // Load problem data
+        function loadProblem(index) {
+            const problem = problems[index];
+            
+            problemNameEl.textContent = problem.name;
+            problemDescriptionEl.innerHTML = problem.description;
+            problemExampleEl.innerHTML = problem.example;
+            timeComplexityEl.textContent = problem.timeComplexity;
+            spaceComplexityEl.textContent = problem.spaceComplexity;
+            testCasesEl.textContent = problem.testCases;
+            acceptanceEl.textContent = problem.acceptance;
+            codeEditorEl.value = problem.code;
+            
+            // Update difficulty
+            difficultyLabel.className = 'difficulty ' + problem.difficulty;
+            difficultyLabel.textContent = problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1);
+            
+            // Show expert badge for expert problems
+            expertBadge.textContent = problem.difficulty === 'expert' ? 'EXPERT' : 'HARD';
+            
+            // Update problem number
+            document.querySelector('.problem-number').textContent = `#${index + 1}`;
+            
+            // Update complexity visualization
+            updateComplexityVisualization(problem.timeComplexity, problem.spaceComplexity);
+            
+            // Update categories
+            const categoriesContainer = document.querySelector('.problem-categories');
+            categoriesContainer.innerHTML = '';
+            problem.categories.forEach(cat => {
+                const tag = document.createElement('span');
+                tag.className = 'category-tag';
+                tag.textContent = cat;
+                categoriesContainer.appendChild(tag);
+            });
+            
+            // Clear output
+            outputContentEl.innerHTML = `
+                <div class="output-line">// Problem #${index+1}: ${problem.name}</div>
+                <div class="output-line">// Click "Run Code" to test your solution</div>
+                <div class="output-line">// Output will appear here after execution</div>
+            `;
+            
+            // Update active topic
+            topicItems.forEach(item => item.classList.remove('active'));
+            topicItems[index].classList.add('active');
+            
+            // Add fade-in animation to content
+            const contentElements = document.querySelectorAll('.fade-in');
+            contentElements.forEach(el => {
+                el.style.opacity = 0;
+                setTimeout(() => {
+                    el.style.opacity = 1;
+                }, 10);
+            });
+        }
+        
+        // Update complexity visualization
+        function updateComplexityVisualization(time, space) {
+            const timeMap = {
+                "O(1)": "10%",
+                "O(log n)": "25%",
+                "O(n)": "50%",
+                "O(n log n)": "65%",
+                "O(n²)": "85%",
+                "O(n³)": "95%",
+                "O(2^n)": "100%",
+                "O(mn log(mn))": "95%"
+            };
+            
+            const spaceMap = {
+                "O(1)": "10%",
+                "O(log n)": "20%",
+                "O(n)": "40%",
+                "O(n log n)": "60%",
+                "O(n²)": "80%",
+                "O(n³)": "95%",
+                "O(2^n)": "100%",
+                "O(mn)": "90%"
+            };
+            
+            timeBar.style.width = timeMap[time] || "50%";
+            spaceBar.style.width = spaceMap[space] || "50%";
+        }
+        
+        // Set up sidebar toggle functionality
+        function setupSidebarToggles() {
+            const sectionTitles = document.querySelectorAll('.sidebar-title');
+            sectionTitles.forEach(title => {
+                title.addEventListener('click', function() {
+                    const listId = this.id.replace('Title', 'List');
+                    const list = document.getElementById(listId);
+                    list.classList.toggle('expanded');
+                    this.querySelector('.fa-chevron-down').classList.toggle('fa-rotate-180');
+                });
+            });
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Topic selection
+            topicItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const problemIndex = parseInt(this.getAttribute('data-problem'));
+                    currentProblemIndex = problemIndex;
+                    loadProblem(currentProblemIndex);
+                    document.querySelector('.sidebar').classList.remove('active');
+                });
+            });
+            
+            // Navigation buttons
+            prevBtn.addEventListener('click', function() {
+                if (currentProblemIndex > 0) {
+                    currentProblemIndex--;
+                    loadProblem(currentProblemIndex);
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentProblemIndex < problems.length - 1) {
+                    currentProblemIndex++;
+                    loadProblem(currentProblemIndex);
+                }
+            });
+            
+            // Run button
+            runBtn.addEventListener('click', function() {
+                runCode();
+            });
+            
+            // Submit button
+            submitBtn.addEventListener('click', function() {
+                submitSolution();
+            });
+            
+            // Hint button
+            hintBtn.addEventListener('click', function() {
+                showHint();
+            });
+        }
+        
+        // Simulate code execution
+        function runCode() {
+            const outputContent = document.getElementById('outputContent');
+            outputContent.innerHTML = '';
+            
+            // Simulating code execution
+            addOutputLine("Compiling code...", "info");
+            
+            setTimeout(() => {
+                addOutputLine("Running test cases...", "info");
+                
+                // Simulate test case execution
+                const problem = problems[currentProblemIndex];
+                const testCases = problem.testCases;
+                let passedCount = 0;
+                
+                for (let i = 1; i <= testCases; i++) {
+                    addOutputLine(`Test case ${i}: Running...`, "info");
+                    setTimeout(() => {
+                        const passed = Math.random() > (problem.difficulty === 'expert' ? 0.4 : 0.2);
+                        if (passed) {
+                            passedCount++;
+                            addOutputLine(`✓ Test case ${i} passed (${(Math.random()*50 + 20).toFixed(0)}ms)`, "success");
+                        } else {
+                            addOutputLine(`✗ Test case ${i} failed`, "error");
+                            addOutputLine(`   Input: ${getRandomInput(problem)}`, "info");
+                            addOutputLine(`   Expected: ${Math.random() > 0.5 ? 'true' : '[]'}`, "info");
+                            addOutputLine(`   Actual: ${Math.random() > 0.5 ? 'false' : 'null'}`, "info");
+                        }
+                        
+                        if (i === testCases) {
+                            if (passedCount === testCases) {
+                                addOutputLine("All test cases passed!", "success");
+                                addOutputLine("Ready to submit your solution", "success");
+                            } else {
+                                addOutputLine(`${passedCount}/${testCases} test cases passed`, passedCount > testCases/2 ? "success" : "error");
+                            }
+                        }
+                    }, 300 * i);
+                }
+            }, 800);
+        }
+        
+        function getRandomInput(problem) {
+            const inputs = {
+                "Array": "[1,2,3,4]",
+                "String": "\"sample input\"",
+                "Tree": "[1,2,3,null,4]",
+                "Graph": "[[1,2],[3,4]]",
+                "Dynamic Programming": "10"
+            };
+            
+            return inputs[problem.categories[0]] || "[]";
+        }
+        
+        // Submit solution
+        function submitSolution() {
+            const outputContent = document.getElementById('outputContent');
+            outputContent.innerHTML = '';
+            
+            addOutputLine("Submitting solution...", "info");
+            
+            setTimeout(() => {
+                // Random chance of having an error for demonstration
+                const hasError = Math.random() > (problems[currentProblemIndex].difficulty === 'expert' ? 0.3 : 0.7);
+                
+                if (hasError) {
+                    addOutputLine("✗ Solution rejected", "error");
+                    addOutputLine(`Test case ${Math.floor(Math.random()*5)+1} failed`, "error");
+                    addOutputLine("Review your solution and try again", "error");
+                    
+                    // Increase learning progress when they fail
+                    learningProgress = Math.min(learningProgress + 5, 100);
+                } else {
+                    addOutputLine("✓ Solution accepted!", "success");
+                    addOutputLine("All test cases passed successfully", "success");
+                    addOutputLine("Congratulations! You've solved this problem", "success");
+                    
+                    // Update solved problems
+                    if (solvedProblems <= currentProblemIndex) {
+                        solvedProblems++;
+                    }
+                    
+                    // Increase learning progress
+                    learningProgress = Math.min(learningProgress + 15, 100);
+                }
+                
+                updateProgress();
+                
+                // Add celebration effect
+                if (!hasError) {
+                    submitBtn.classList.add('pulse');
+                    setTimeout(() => {
+                        submitBtn.classList.remove('pulse');
+                    }, 2000);
+                }
+            }, 1500);
+        }
+        
+        // Show hint
+        function showHint() {
+            const hints = [
+                "For Arrays: Consider two-pointer or sliding window techniques",
+                "For Strings: Try dynamic programming or trie data structures",
+                "For Trees: Recursion is often the most straightforward approach",
+                "For Graphs: Consider BFS for shortest path, DFS for traversal",
+                "For DP: Identify the recurrence relation and base cases",
+                "For Expert problems: Consider advanced techniques like Dijkstra, A*, or meet-in-middle"
+            ];
+            
+            const outputContent = document.getElementById('outputContent');
+            outputContent.innerHTML = '';
+            
+            addOutputLine("💡 Hint for " + problems[currentProblemIndex].name, "success");
+            addOutputLine(hints[Math.min(currentProblemIndex, hints.length-1)], "info");
+            
+            // Increase learning progress
+            learningProgress = Math.min(learningProgress + 8, 100);
+            updateProgress();
+        }
+        
+        // Update progress indicators
+        function updateProgress() {
+            solvedCountEl.textContent = solvedProblems + "/" + problems.length;
+            solvedProgressEl.style.width = (solvedProblems / problems.length * 100) + "%";
+            
+            learningProgressEl.style.width = learningProgress + "%";
+            progressPercentEl.textContent = learningProgress + "%";
+        }
+        
+        // Helper function to add output lines
+        function addOutputLine(text, type = "normal") {
+            const line = document.createElement('div');
+            line.className = `output-line ${type}`;
+            line.textContent = text;
+            document.getElementById('outputContent').appendChild(line);
+            
+            // Auto scroll to bottom
+            document.getElementById('outputContent').scrollTop = document.getElementById('outputContent').scrollHeight;
+        }
+        
+        // Initialize with some example output
+        window.onload = function() {
+            init();
+            addOutputLine("Welcome to Advanced DSA Master!", "success");
+            addOutputLine("Ready to solve 100 challenging problems", "info");
+            addOutputLine("Start with problem #1: Trapping Rain Water 3D", "info");
+        };
+    </script>
+</body>
+</html>
