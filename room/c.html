@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Programming Adventure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(to right, #457fca, #5691c8);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: #ffd43b;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 25px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .module {
+            padding: 15px 25px;
+            border-left: 5px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .module:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .module.active {
+            border-left: 5px solid #ffd43b;
+            background: rgba(255, 255, 255, 0.15);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 212, 59, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 212, 59, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 212, 59, 0); }
+        }
+        
+        .module i {
+            font-size: 20px;
+            color: #3498db;
+        }
+        
+        .module h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .module-progress {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .module-title {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .module-description {
+            color: #34495e;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .challenge-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .challenge-title {
+            font-size: 24px;
+            color: #3498db;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .challenge-description {
+            color: #2c3e50;
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .code-editor {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .code-content {
+            color: #d4d4d4;
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            min-height: 150px;
+            padding: 10px;
+            background: #252526;
+            border-radius: 5px;
+            overflow: auto;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-number {
+            color: #b5cea8;
+        }
+        
+        .code-operator {
+            color: #d4d4d4;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: #e3f2fd;
+            border: 2px solid #bbdefb;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .option:hover {
+            background: #bbdefb;
+            transform: translateY(-3px);
+        }
+        
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #a5d6a7;
+            animation: correctPulse 0.5s;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .option.incorrect {
+            background: #ffcdd2;
+            border-color: #ef9a9a;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+        
+        .btn-secondary:hover {
+            background: #dfe6e9;
+        }
+        
+        .progress-container {
+            margin-top: auto;
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-main {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-main {
+            height: 100%;
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            border: 2px solid #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            border: 2px solid #ffcdd2;
+            color: #c62828;
+        }
+        
+        .feedback-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feedback-content {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .level-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .level {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .level.locked {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        .level.unlocked {
+            background: #81c784;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .level.current {
+            background: #ffd54f;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 213, 79, 0.7);
+            animation: pulse 2s infinite;
+        }
+        
+        .level.completed {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .level-select-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 20px 0 15px;
+        }
+        
+        .victory-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .victory-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .trophy {
+            font-size: 100px;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.2);
+            animation: spin 1s ease;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(0.5); opacity: 0; }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        }
+        
+        .badges-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .badge {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .badge:nth-child(2) {
+            animation-delay: 0.5s;
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+        }
+        
+        .badge:nth-child(3) {
+            animation-delay: 1s;
+            background: linear-gradient(135deg, #e74c3c, #e67e22);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .console-output {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            display: none;
+        }
+        
+        .console-header {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .run-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .run-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .achievements-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .achievement {
+            background: #f1c40f;
+            color: #2c3e50;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .xp-animation {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            color: #f1c40f;
+            animation: xpFloat 1.5s ease-out;
+            pointer-events: none;
+            z-index: 200;
+        }
+        
+        @keyframes xpFloat {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat-box {
+                min-width: 80px;
+                padding: 6px 10px;
+            }
+            
+            .level {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            
+            .game-container {
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .badges-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <h1>C Programming Adventure</h1>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="currentLevel">1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">XP</div>
+                    <div class="stat-value" id="xpValue">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="scoreValue">0</div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="sidebar">
+                <div class="module active" data-module="basics">
+                    <i class="fas fa-vial"></i>
+                    <div>
+                        <h3>C Basics</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="basics-progress" style="width: 20%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="control">
+                    <i class="fas fa-code"></i>
+                    <div>
+                        <h3>Control Structures</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="control-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="functions">
+                    <i class="fas fa-function"></i>
+                    <div>
+                        <h3>Functions</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="functions-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="data">
+                    <i class="fas fa-list"></i>
+                    <div>
+                        <h3>Data Structures</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="data-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" data-module="pointers">
+                    <i class="fas fa-cube"></i>
+                    <div>
+                        <h3>Pointers & Memory</h3>
+                        <div class="module-progress">
+                            <div class="progress-bar" id="pointers-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <h2 class="module-title" id="moduleTitle">C Basics</h2>
+                <p class="module-description" id="moduleDescription">
+                    Learn the fundamental building blocks of C programming including variables, data types, and basic operations.
+                </p>
+                
+                <div class="level-select-title">Select Level</div>
+                <div class="level-container" id="levelContainer">
+                    <!-- Levels will be dynamically generated -->
+                </div>
+                
+                <div class="achievements-bar">
+                    <div class="achievement">
+                        <i class="fas fa-star"></i> First Steps
+                    </div>
+                    <div class="achievement">
+                        <i class="fas fa-bolt"></i> Quick Learner
+                    </div>
+                </div>
+                
+                <div id="quizContainer">
+                    <!-- Quiz content will be dynamically generated -->
+                </div>
+                
+                <div class="console-output" id="consoleOutput">
+                    <div class="console-header">
+                        <span>Program Output</span>
+                        <span>Status: <span id="runStatus">Ready</span></span>
+                    </div>
+                    <pre id="outputContent"></pre>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Course Progress</span>
+                        <span id="progressPercentage">5% Complete</span>
+                    </div>
+                    <div class="progress-bar-main">
+                        <div class="progress-main" id="mainProgress" style="width: 5%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="victory-screen" id="victoryScreen">
+                <div class="victory-content">
+                    <div class="trophy">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h1>Congratulations!</h1>
+                    <p class="module-description">You've completed all 30 levels of the C Programming Adventure!</p>
+                    
+                    <div class="badges-container">
+                        <div class="badge">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                    </div>
+                    
+                    <p class="stat-value" style="font-size: 32px; margin: 20px 0;">Final Score: <span id="finalScore">0</span></p>
+                    <button class="btn btn-primary" id="restartGameBtn">
+                        <i class="fas fa-redo"></i> Play Again
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game state
+            const gameState = {
+                currentLevel: 1,
+                maxLevel: 30,
+                score: 0,
+                xp: 0,
+                currentModule: 'basics',
+                completedLevels: new Set(),
+                achievements: new Set(['First Steps', 'Quick Learner'])
+            };
+            
+            // DOM elements
+            const levelContainer = document.getElementById('levelContainer');
+            const quizContainer = document.getElementById('quizContainer');
+            const moduleTitle = document.getElementById('moduleTitle');
+            const moduleDescription = document.getElementById('moduleDescription');
+            const currentLevelElement = document.getElementById('currentLevel');
+            const xpValueElement = document.getElementById('xpValue');
+            const scoreValueElement = document.getElementById('scoreValue');
+            const mainProgress = document.getElementById('mainProgress');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const victoryScreen = document.getElementById('victoryScreen');
+            const finalScore = document.getElementById('finalScore');
+            const restartGameBtn = document.getElementById('restartGameBtn');
+            const consoleOutput = document.getElementById('consoleOutput');
+            const outputContent = document.getElementById('outputContent');
+            const runStatus = document.getElementById('runStatus');
+            
+            // Questions database
+            const questions = [
+                // Level 1-5: C Basics
+                {
+                    level: 1,
+                    module: 'basics',
+                    question: "How do you print 'Hello, World!' in C?",
+                    options: [
+                        'printf("Hello, World!");',
+                        'console.log("Hello, World!");',
+                        'print("Hello, World!");',
+                        'System.out.println("Hello, World!");'
+                    ],
+                    answer: 0,
+                    explanation: "In C, the printf() function is used to output text to the console. Don't forget to include stdio.h!",
+                    code: `<span class="code-comment">// Write your code here</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;stdio.h&gt;</span>
+
+<span class="code-keyword">int</span> main() {
+    printf(<span class="code-string">"Hello, World!"</span>);
+    <span class="code-keyword">return</span> 0;
+}`
+                },
+                {
+                    level: 2,
+                    module: 'basics',
+                    question: "Which of the following is a valid variable name in C?",
+                    options: [
+                        "my-variable",
+                        "123variable",
+                        "_my_variable",
+                        "int"
+                    ],
+                    answer: 2,
+                    explanation: "Variable names can contain letters, numbers, and underscores, but cannot start with a number or contain hyphens. They also can't be reserved keywords like 'int'.",
+                    code: `<span class="code-comment">// Valid variable names</span>
+<span class="code-keyword">int</span> my_var = 10;
+<span class="code-keyword">int</span> _private = 20;
+
+<span class="code-comment">// Invalid names:</span>
+<span class="code-comment">// int my-var = 30;</span>
+<span class="code-comment">// int 123var = 40;</span>
+<span class="code-comment">// int int = 50;</span>`
+                },
+                {
+                    level: 3,
+                    module: 'basics',
+                    question: "What is the correct way to declare an integer variable in C?",
+                    options: [
+                        "integer x = 5;",
+                        "int x = 5;",
+                        "var x = 5;",
+                        "x := 5;"
+                    ],
+                    answer: 1,
+                    explanation: "In C, you must declare variables with their type (int for integers) before using them.",
+                    code: `<span class="code-comment">// Integer declaration</span>
+<span class="code-keyword">int</span> x = 5;
+<span class="code-keyword">int</span> y = 10;
+<span class="code-keyword">int</span> sum = x + y;`
+                },
+                {
+                    level: 4,
+                    module: 'basics',
+                    question: "Which operator is used for pointer dereferencing in C?",
+                    options: [
+                        "*",
+                        "&",
+                        "->",
+                        "."
+                    ],
+                    answer: 0,
+                    explanation: "The asterisk (*) is used to dereference a pointer (access the value it points to), while & gets the address of a variable.",
+                    code: `<span class="code-comment">// Pointer example</span>
+<span class="code-keyword">int</span> x = 10;
+<span class="code-keyword">int</span> *ptr = &x;
+<span class="code-keyword">int</span> value = *ptr; <span class="code-comment">// Dereference pointer</span>`
+                },
+                {
+                    level: 5,
+                    module: 'basics',
+                    question: "What is the correct syntax for a single-line comment in C?",
+                    options: [
+                        "// This is a comment",
+                        "/* This is a comment */",
+                        "# This is a comment",
+                        "-- This is a comment"
+                    ],
+                    answer: 0,
+                    explanation: "C uses // for single-line comments and /* */ for multi-line comments.",
+                    code: `<span class="code-comment">// This is a single-line comment</span>
+printf(<span class="code-string">"Hello"</span>); <span class="code-comment">// Another comment</span>
+
+<span class="code-comment">/*
+This is a
+multi-line comment
+*/</span>`
+                },
+                
+                // Level 6-10: Control Structures
+                {
+                    level: 6,
+                    module: 'control',
+                    question: "What is the correct syntax for an if statement in C?",
+                    options: [
+                        "if (x > 5) { }",
+                        "if x > 5:",
+                        "if [x > 5] then",
+                        "if {x > 5}"
+                    ],
+                    answer: 0,
+                    explanation: "C uses parentheses around the condition and curly braces for the code block.",
+                    code: `<span class="code-comment">// Correct if statement</span>
+<span class="code-keyword">int</span> x = 10;
+<span class="code-keyword">if</span> (x > 5) {
+    printf(<span class="code-string">"x is greater than 5"</span>);
+}`
+                },
+                {
+                    level: 7,
+                    module: 'control',
+                    question: "Which loop is guaranteed to execute at least once in C?",
+                    options: [
+                        "for loop",
+                        "while loop",
+                        "do-while loop",
+                        "repeat loop"
+                    ],
+                    answer: 2,
+                    explanation: "The do-while loop checks its condition at the end, so it always runs at least once.",
+                    code: `<span class="code-comment">// do-while example</span>
+<span class="code-keyword">int</span> i = 0;
+<span class="code-keyword">do</span> {
+    printf(<span class="code-string">"%d "</span>, i);
+    i++;
+} <span class="code-keyword">while</span> (i < 5);`
+                },
+                {
+                    level: 8,
+                    module: 'control',
+                    question: "What does the 'break' statement do in a switch case?",
+                    options: [
+                        "Exits the program",
+                        "Continues to the next case",
+                        "Exits the switch statement",
+                        "Restarts the switch statement"
+                    ],
+                    answer: 2,
+                    explanation: "Without break, execution would 'fall through' to the next case.",
+                    code: `<span class="code-comment">// switch example</span>
+<span class="code-keyword">switch</span> (grade) {
+    <span class="code-keyword">case</span> <span class="code-string">'A'</span>:
+        printf(<span class="code-string">"Excellent"</span>);
+        <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> <span class="code-string">'B'</span>:
+        printf(<span class="code-string">"Good"</span>);
+        <span class="code-keyword">break</span>;
+    <span class="code-keyword">default</span>:
+        printf(<span class="code-string">"Invalid grade"</span>);
+}`
+                },
+                {
+                    level: 9,
+                    module: 'control',
+                    question: "Which operator is used for logical AND in C?",
+                    options: [
+                        "&&",
+                        "||",
+                        "AND",
+                        "&"
+                    ],
+                    answer: 0,
+                    explanation: "&& is logical AND, || is logical OR, & is bitwise AND.",
+                    code: `<span class="code-comment">// Logical operators</span>
+<span class="code-keyword">if</span> (age > 18 && age < 65) {
+    printf(<span class="code-string">"Working age"</span>);
+}`
+                },
+                {
+                    level: 10,
+                    module: 'control',
+                    question: "What is the purpose of the 'continue' statement in a loop?",
+                    options: [
+                        "Exits the loop immediately",
+                        "Skips to the next iteration",
+                        "Restarts the loop",
+                        "Pauses the loop"
+                    ],
+                    answer: 1,
+                    explanation: "continue skips the rest of the current iteration and moves to the next one.",
+                    code: `<span class="code-comment">// continue example</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = 0; i < 10; i++) {
+    <span class="code-keyword">if</span> (i % 2 == 0) <span class="code-keyword">continue</span>;
+    printf(<span class="code-string">"%d "</span>, i); <span class="code-comment">// Prints odd numbers</span>
+}`
+                },
+                
+                // Level 11-15: Functions
+                {
+                    level: 11,
+                    module: 'functions',
+                    question: "How do you define a function in C?",
+                    options: [
+                        "function my_func() { }",
+                        "def my_func() { }",
+                        "void my_func() { }",
+                        "func my_func() { }"
+                    ],
+                    answer: 2,
+                    explanation: "Functions in C are defined with a return type, name, parameters, and body.",
+                    code: `<span class="code-comment">// Function definition</span>
+<span class="code-keyword">void</span> greet() {
+    printf(<span class="code-string">"Hello from a function!"</span>);
+}
+
+<span class="code-comment">// Function call</span>
+greet();`
+                },
+                {
+                    level: 12,
+                    module: 'functions',
+                    question: "What is the purpose of the 'return' statement in C?",
+                    options: [
+                        "To print a value to the console",
+                        "To exit the program",
+                        "To pass a value back to the caller",
+                        "To indicate the end of a function"
+                    ],
+                    answer: 2,
+                    explanation: "The return statement sends a value back to the code that called the function.",
+                    code: `<span class="code-comment">// Function with return value</span>
+<span class="code-keyword">int</span> square(<span class="code-keyword">int</span> num) {
+    <span class="code-keyword">return</span> num * num;
+}
+
+<span class="code-keyword">int</span> result = square(5);
+printf(<span class="code-string">"%d"</span>, result); <span class="code-comment">// Output: 25</span>`
+                },
+                {
+                    level: 13,
+                    module: 'functions',
+                    question: "What is function prototyping in C?",
+                    options: [
+                        "Creating a function template",
+                        "Declaring a function before defining it",
+                        "Making a function faster",
+                        "Documenting a function"
+                    ],
+                    answer: 1,
+                    explanation: "Function prototypes declare functions before they're defined, allowing you to call them before their definition appears.",
+                    code: `<span class="code-comment">// Function prototype</span>
+<span class="code-keyword">int</span> add(<span class="code-keyword">int</span> a, <span class="code-keyword">int</span> b);
+
+<span class="code-keyword">int</span> main() {
+    <span class="code-keyword">int</span> sum = add(5, 3);
+    <span class="code-keyword">return</span> 0;
+}
+
+<span class="code-keyword">int</span> add(<span class="code-keyword">int</span> a, <span class="code-keyword">int</span> b) {
+    <span class="code-keyword">return</span> a + b;
+}`
+                },
+                {
+                    level: 14,
+                    module: 'functions',
+                    question: "What is recursion in C?",
+                    options: [
+                        "A function that calls another function",
+                        "A function that calls itself",
+                        "A function with many parameters",
+                        "A function that never returns"
+                    ],
+                    answer: 1,
+                    explanation: "Recursion is when a function calls itself, either directly or indirectly.",
+                    code: `<span class="code-comment">// Recursive function</span>
+<span class="code-keyword">int</span> factorial(<span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (n == 0) <span class="code-keyword">return</span> 1;
+    <span class="code-keyword">return</span> n * factorial(n - 1);
+}`
+                },
+                {
+                    level: 15,
+                    module: 'functions',
+                    question: "What is the main() function in C?",
+                    options: [
+                        "An optional function",
+                        "A function that must be present in every C program",
+                        "A function that prints to console",
+                        "A function that handles errors"
+                    ],
+                    answer: 1,
+                    explanation: "The main() function is the entry point of every C program and is required.",
+                    code: `<span class="code-comment">// Main function</span>
+<span class="code-keyword">int</span> main() {
+    printf(<span class="code-string">"Program starting"</span>);
+    <span class="code-keyword">return</span> 0;
+}`
+                },
+                
+                // Level 16-20: Data Structures
+                {
+                    level: 16,
+                    module: 'data',
+                    question: "How do you declare an array of 10 integers in C?",
+                    options: [
+                        "int array[10];",
+                        "array int[10];",
+                        "int[] array = new int[10];",
+                        "int array = {10};"
+                    ],
+                    answer: 0,
+                    explanation: "Arrays in C are declared with the type, name, and size in square brackets.",
+                    code: `<span class="code-comment">// Array declaration</span>
+<span class="code-keyword">int</span> numbers[10]; <span class="code-comment">// Array of 10 integers</span>
+numbers[0] = 5;   <span class="code-comment">// First element</span>`
+                },
+                {
+                    level: 17,
+                    module: 'data',
+                    question: "What is the index of the first element in a C array?",
+                    options: [
+                        "0",
+                        "1",
+                        "-1",
+                        "It depends on the array"
+                    ],
+                    answer: 0,
+                    explanation: "C arrays are zero-indexed, meaning the first element is at index 0.",
+                    code: `<span class="code-comment">// Array indexing</span>
+<span class="code-keyword">int</span> arr[3] = {10, 20, 30};
+<span class="code-keyword">int</span> first = arr[0]; <span class="code-comment">// 10</span>
+<span class="code-keyword">int</span> last = arr[2];  <span class="code-comment">// 30</span>`
+                },
+                {
+                    level: 18,
+                    module: 'data',
+                    question: "How do you initialize a struct in C?",
+                    options: [
+                        "struct Person p = new Person();",
+                        "Person p = { };",
+                        "struct Person p = { };",
+                        "struct p = Person();"
+                    ],
+                    answer: 2,
+                    explanation: "Structs are initialized with the struct keyword, type name, variable name, and initializer.",
+                    code: `<span class="code-comment">// Struct example</span>
+<span class="code-keyword">struct</span> Person {
+    <span class="code-keyword">char</span> name[50];
+    <span class="code-keyword">int</span> age;
+};
+
+<span class="code-keyword">struct</span> Person p1 = {<span class="code-string">"Alice"</span>, 30};`
+                },
+                {
+                    level: 19,
+                    module: 'data',
+                    question: "What is a union in C?",
+                    options: [
+                        "A collection of different data types",
+                        "A special kind of struct",
+                        "A variable that can hold different types at different times",
+                        "A combination of arrays"
+                    ],
+                    answer: 2,
+                    explanation: "A union allows storing different data types in the same memory location.",
+                    code: `<span class="code-comment">// Union example</span>
+<span class="code-keyword">union</span> Data {
+    <span class="code-keyword">int</span> i;
+    <span class="code-keyword">float</span> f;
+    <span class="code-keyword">char</span> str[20];
+};
+
+<span class="code-keyword">union</span> Data data;
+data.i = 10; <span class="code-comment">// Now holds an integer</span>
+data.f = 3.14; <span class="code-comment">// Now holds a float (overwrites i)</span>`
+                },
+                {
+                    level: 20,
+                    module: 'data',
+                    question: "How do you determine the size of an array in bytes?",
+                    options: [
+                        "size(array)",
+                        "sizeof(array)",
+                        "length(array)",
+                        "array.size"
+                    ],
+                    answer: 1,
+                    explanation: "The sizeof operator returns the size in bytes of its operand.",
+                    code: `<span class="code-comment">// sizeof example</span>
+<span class="code-keyword">int</span> arr[10];
+<span class="code-keyword">size_t</span> size = <span class="code-keyword">sizeof</span>(arr); <span class="code-comment">// 40 bytes (assuming 4-byte int)</span>`
+                },
+                
+                // Level 21-25: Pointers & Memory
+                {
+                    level: 21,
+                    module: 'pointers',
+                    question: "What does the & operator do in C?",
+                    options: [
+                        "Logical AND",
+                        "Bitwise AND",
+                        "Address of a variable",
+                        "Dereference a pointer"
+                    ],
+                    answer: 2,
+                    explanation: "The & operator returns the memory address of a variable.",
+                    code: `<span class="code-comment">// Address operator</span>
+<span class="code-keyword">int</span> x = 10;
+<span class="code-keyword">int</span> *ptr = &x; <span class="code-comment">// ptr now holds the address of x</span>`
+                },
+                {
+                    level: 22,
+                    module: 'pointers',
+                    question: "How do you allocate memory dynamically in C?",
+                    options: [
+                        "new int[10];",
+                        "malloc(10 * sizeof(int));",
+                        "alloc(10 * sizeof(int));",
+                        "create(int, 10);"
+                    ],
+                    answer: 1,
+                    explanation: "malloc() is used for dynamic memory allocation in C.",
+                    code: `<span class="code-comment">// Dynamic allocation</span>
+<span class="code-keyword">int</span> *arr = (<span class="code-keyword">int</span>*)<span class="code-keyword">malloc</span>(10 * <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+<span class="code-keyword">if</span> (arr == NULL) {
+    <span class="code-comment">// Handle allocation failure</span>
+}`
+                },
+                {
+                    level: 23,
+                    module: 'pointers',
+                    question: "What is the purpose of free() in C?",
+                    options: [
+                        "To clear a variable's value",
+                        "To deallocate dynamically allocated memory",
+                        "To exit a function",
+                        "To reset a pointer"
+                    ],
+                    answer: 1,
+                    explanation: "free() releases memory allocated by malloc(), calloc(), or realloc().",
+                    code: `<span class="code-comment">// Memory deallocation</span>
+<span class="code-keyword">int</span> *ptr = (<span class="code-keyword">int</span>*)<span class="code-keyword">malloc</span>(<span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+<span class="code-comment">// Use the memory...</span>
+<span class="code-keyword">free</span>(ptr); <span class="code-comment">// Release the memory</span>`
+                },
+                {
+                    level: 24,
+                    module: 'pointers',
+                    question: "What is a pointer to a pointer in C?",
+                    options: [
+                        "A variable that stores the address of another pointer",
+                        "A pointer that points to itself",
+                        "A special kind of array",
+                        "A pointer with double the memory"
+                    ],
+                    answer: 0,
+                    explanation: "A pointer to a pointer stores the address of another pointer variable.",
+                    code: `<span class="code-comment">// Pointer to pointer</span>
+<span class="code-keyword">int</span> x = 10;
+<span class="code-keyword">int</span> *ptr = &x;
+<span class="code-keyword">int</span> **ptr_to_ptr = &ptr;`
+                },
+                {
+                    level: 25,
+                    module: 'pointers',
+                    question: "What is NULL in C?",
+                    options: [
+                        "A special zero value",
+                        "A pointer that doesn't point to anything",
+                        "An empty variable",
+                        "Both A and B"
+                    ],
+                    answer: 3,
+                    explanation: "NULL is a macro that represents a null pointer (doesn't point to anything) and typically has the value 0.",
+                    code: `<span class="code-comment">// NULL pointer</span>
+<span class="code-keyword">int</span> *ptr = NULL;
+<span class="code-keyword">if</span> (ptr == NULL) {
+    printf(<span class="code-string">"Pointer is null"</span>);
+}`
+                },
+                
+                // Level 26-30: Advanced Topics
+                {
+                    level: 26,
+                    module: 'pointers',
+                    question: "How do you handle errors in C?",
+                    options: [
+                        "try-catch blocks",
+                        "errno and perror()",
+                        "error objects",
+                        "exception handling"
+                    ],
+                    answer: 1,
+                    explanation: "C uses errno to indicate errors and functions like perror() to print error messages.",
+                    code: `<span class="code-comment">// Error handling</span>
+FILE *file = fopen(<span class="code-string">"nonexistent.txt"</span>, <span class="code-string">"r"</span>);
+<span class="code-keyword">if</span> (file == NULL) {
+    perror(<span class="code-string">"Error opening file"</span>);
+    <span class="code-keyword">return</span> 1;
+}`
+                },
+                {
+                    level: 27,
+                    module: 'pointers',
+                    question: "What is a function pointer in C?",
+                    options: [
+                        "A pointer that points to a function",
+                        "A pointer returned by a function",
+                        "A special kind of array",
+                        "A pointer with function properties"
+                    ],
+                    answer: 0,
+                    explanation: "Function pointers store the address of a function and can be used to call that function.",
+                    code: `<span class="code-comment">// Function pointer</span>
+<span class="code-keyword">int</span> add(<span class="code-keyword">int</span> a, <span class="code-keyword">int</span> b) { <span class="code-keyword">return</span> a + b; }
+
+<span class="code-keyword">int</span> (*func_ptr)(<span class="code-keyword">int</span>, <span class="code-keyword">int</span>) = &add;
+<span class="code-keyword">int</span> result = func_ptr(5, 3); <span class="code-comment">// Calls add(5, 3)</span>`
+                },
+                {
+                    level: 28,
+                    module: 'pointers',
+                    question: "What is the purpose of typedef in C?",
+                    options: [
+                        "To define new data types",
+                        "To create type aliases",
+                        "To declare variables",
+                        "To include headers"
+                    ],
+                    answer: 1,
+                    explanation: "typedef creates an alias for an existing type, making code more readable.",
+                    code: `<span class="code-comment">// typedef example</span>
+<span class="code-keyword">typedef</span> <span class="code-keyword">unsigned</span> <span class="code-keyword">long</span> <span class="code-keyword">int</span> ulint;
+ulint bigNumber = 1000000;`
+                },
+                {
+                    level: 29,
+                    module: 'pointers',
+                    question: "What is the purpose of the static keyword in C?",
+                    options: [
+                        "To make a variable constant",
+                        "To limit a variable's scope to the file",
+                        "To make a variable persist between function calls",
+                        "Both B and C"
+                    ],
+                    answer: 3,
+                    explanation: "static has two uses: file scope (when used with global variables) and persistence (when used with local variables).",
+                    code: `<span class="code-comment">// static examples</span>
+<span class="code-keyword">static</span> <span class="code-keyword">int</span> file_scope_var; <span class="code-comment">// Only visible in this file</span>
+
+<span class="code-keyword">void</span> counter() {
+    <span class="code-keyword">static</span> <span class="code-keyword">int</span> count = 0; <span class="code-comment">// Persists between calls</span>
+    count++;
+}`
+                },
+                {
+                    level: 30,
+                    module: 'pointers',
+                    question: "What is the purpose of the const keyword in C?",
+                    options: [
+                        "To make a variable constant",
+                        "To optimize the variable",
+                        "To make the variable static",
+                        "To declare a constant function"
+                    ],
+                    answer: 0,
+                    explanation: "const makes a variable read-only, preventing modification after initialization.",
+                    code: `<span class="code-comment">// const example</span>
+<span class="code-keyword">const</span> <span class="code-keyword">int</span> MAX_SIZE = 100;
+<span class="code-comment">// MAX_SIZE = 200; // Error - can't modify const</span>`
+                }
+            ];
+            
+            // Initialize game
+            function initGame() {
+                createLevelButtons();
+                loadLevel(gameState.currentLevel);
+                updateStats();
+                updateProgressBars();
+            }
+            
+            // Create level buttons
+            function createLevelButtons() {
+                levelContainer.innerHTML = '';
+                for (let i = 1; i <= gameState.maxLevel; i++) {
+                    const levelBtn = document.createElement('div');
+                    levelBtn.className = 'level';
+                    levelBtn.textContent = i;
+                    
+                    if (i === gameState.currentLevel) {
+                        levelBtn.classList.add('current');
+                    } else if (gameState.completedLevels.has(i)) {
+                        levelBtn.classList.add('completed', 'unlocked');
+                    } else if (i <= gameState.currentLevel) {
+                        levelBtn.classList.add('unlocked');
+                    } else {
+                        levelBtn.classList.add('locked');
+                    }
+                    
+                    levelBtn.addEventListener('click', () => {
+                        if (!levelBtn.classList.contains('locked')) {
+                            loadLevel(i);
+                        }
+                    });
+                    
+                    levelContainer.appendChild(levelBtn);
+                }
+            }
+            
+            // Load a specific level
+            function loadLevel(level) {
+                gameState.currentLevel = level;
+                currentLevelElement.textContent = level;
+                
+                const question = questions.find(q => q.level === level);
+                if (question) {
+                    renderQuestion(question);
+                }
+                
+                createLevelButtons();
+                consoleOutput.style.display = 'none';
+            }
+            
+            // Render a question
+            function renderQuestion(question) {
+                quizContainer.innerHTML = `
+                    <div class="challenge-container">
+                        <h3 class="challenge-title"><i class="fas fa-question-circle"></i> Level ${question.level}: ${question.module.charAt(0).toUpperCase() + question.module.slice(1)}</h3>
+                        <p class="challenge-description">${question.question}</p>
+                        
+                        <div class="code-editor">
+                            <div class="code-header">
+                                <span>question.c</span>
+                                <button class="run-btn" id="runCodeBtn"><i class="fas fa-play"></i> Run Code</button>
+                            </div>
+                            <div class="code-content">${question.code || '<span class="code-comment">// No code example for this question</span>'}</div>
+                        </div>
+                        
+                        <div class="options">
+                            ${question.options.map((option, index) => `
+                                <div class="option" data-answer="${index}">${option}</div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="feedback" id="feedback">
+                            <div class="feedback-title" id="feedbackTitle"></div>
+                            <div class="feedback-content" id="feedbackContent"></div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" id="hintBtn">
+                                <i class="fas fa-lightbulb"></i> Show Hint
+                            </button>
+                            <button class="btn btn-primary" id="nextBtn" style="display: none;">
+                                <i class="fas fa-arrow-right"></i> Next Level
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners to options
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', () => checkAnswer(option, question));
+                });
+                
+                // Add event listener to hint button
+                document.getElementById('hintBtn').addEventListener('click', () => {
+                    document.getElementById('feedback').style.display = 'block';
+                    document.getElementById('feedback').className = 'feedback';
+                    document.getElementById('feedbackTitle').innerHTML = '<i class="fas fa-lightbulb"></i> Hint';
+                    document.getElementById('feedbackContent').textContent = question.explanation;
+                });
+                
+                // Add event listener to run code button
+                document.getElementById('runCodeBtn').addEventListener('click', () => {
+                    runCode(question);
+                });
+            }
+            
+            // Simulate running code
+            function runCode(question) {
+                consoleOutput.style.display = 'block';
+                runStatus.textContent = "Running...";
+                runStatus.style.color = "#f39c12";
+                
+                // Simulate execution delay
+                setTimeout(() => {
+                    let output = "";
+                    
+                    // Special outputs for different questions
+                    switch(question.level) {
+                        case 1:
+                            output = "Hello, World!";
+                            break;
+                        case 2:
+                            output = "No output (valid variable names)";
+                            break;
+                        case 3:
+                            output = "No output (variable declarations)";
+                            break;
+                        case 4:
+                            output = "No output (pointer example)";
+                            break;
+                        case 5:
+                            output = "Hello";
+                            break;
+                        case 6:
+                            output = "x is greater than 5";
+                            break;
+                        case 7:
+                            output = "0 1 2 3 4";
+                            break;
+                        case 8:
+                            output = "Excellent";
+                            break;
+                        case 9:
+                            output = "Working age";
+                            break;
+                        case 10:
+                            output = "1 3 5 7 9";
+                            break;
+                        case 11:
+                            output = "Hello from a function!";
+                            break;
+                        case 12:
+                            output = "25";
+                            break;
+                        case 13:
+                            output = "No output (function prototype)";
+                            break;
+                        case 14:
+                            output = "No output (recursive function)";
+                            break;
+                        case 15:
+                            output = "Program starting";
+                            break;
+                        case 16:
+                            output = "No output (array declaration)";
+                            break;
+                        case 17:
+                            output = "No output (array indexing)";
+                            break;
+                        case 18:
+                            output = "No output (struct example)";
+                            break;
+                        case 19:
+                            output = "No output (union example)";
+                            break;
+                        case 20:
+                            output = "40";
+                            break;
+                        case 21:
+                            output = "No output (address operator)";
+                            break;
+                        case 22:
+                            output = "No output (dynamic allocation)";
+                            break;
+                        case 23:
+                            output = "No output (memory deallocation)";
+                            break;
+                        case 24:
+                            output = "No output (pointer to pointer)";
+                            break;
+                        case 25:
+                            output = "Pointer is null";
+                            break;
+                        case 26:
+                            output = "Error opening file: No such file or directory";
+                            break;
+                        case 27:
+                            output = "No output (function pointer)";
+                            break;
+                        case 28:
+                            output = "No output (typedef example)";
+                            break;
+                        case 29:
+                            output = "No output (static examples)";
+                            break;
+                        case 30:
+                            output = "No output (const example)";
+                            break;
+                        default:
+                            output = "Program executed successfully!";
+                    }
+                    
+                    outputContent.textContent = output;
+                    runStatus.textContent = "Success";
+                    runStatus.style.color = "#2ecc71";
+                    
+                    // Add XP for running code
+                    gameState.xp += 5;
+                    updateStats();
+                    showXPAnimation(5);
+                    
+                }, 800);
+            }
+            
+            // Check the selected answer
+            function checkAnswer(selectedOption, question) {
+                const selectedIndex = parseInt(selectedOption.dataset.answer);
+                const feedback = document.getElementById('feedback');
+                const feedbackTitle = document.getElementById('feedbackTitle');
+                const feedbackContent = document.getElementById('feedbackContent');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                // Disable all options
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                });
+                
+                if (selectedIndex === question.answer) {
+                    // Correct answer
+                    selectedOption.classList.add('correct');
+                    feedbackTitle.innerHTML = '<i class="fas fa-check-circle"></i> Correct!';
+                    feedbackContent.textContent = question.explanation;
+                    feedback.classList.add('correct');
+                    feedback.style.display = 'block';
+                    
+                    // Award points
+                    gameState.score += 100;
+                    gameState.xp += 50;
+                    gameState.completedLevels.add(question.level);
+                    
+                    // Add achievement if it's the first level
+                    if (question.level === 1 && !gameState.achievements.has('C Novice')) {
+                        gameState.achievements.add('C Novice');
+                    }
+                    
+                    // Show next level button if not the last level
+                    if (question.level < gameState.maxLevel) {
+                        nextBtn.style.display = 'flex';
+                        nextBtn.addEventListener('click', () => {
+                            loadLevel(question.level + 1);
+                        });
+                    } else {
+                        // Last level completed - show victory screen
+                        victoryScreen.style.display = 'flex';
+                        finalScore.textContent = gameState.score;
+                    }
+                    
+                    // Show XP animation
+                    showXPAnimation(50);
+                } else {
+                    // Incorrect answer
+                    selectedOption.classList.add('incorrect');
+                    feedbackTitle.innerHTML = '<i class="fas fa-times-circle"></i> Incorrect';
+                    feedbackContent.textContent = question.explanation;
+                    feedback.classList.add('incorrect');
+                    feedback.style.display = 'block';
+                    
+                    // Highlight the correct answer
+                    document.querySelector(`.option[data-answer="${question.answer}"]`).classList.add('correct');
+                    
+                    // Penalty for wrong answer
+                    gameState.score = Math.max(0, gameState.score - 10);
+                    updateStats();
+                }
+                
+                updateStats();
+                updateProgressBars();
+            }
+            
+            // Show XP animation
+            function showXPAnimation(amount) {
+                const xpElement = document.createElement('div');
+                xpElement.className = 'xp-animation';
+                xpElement.textContent = `+${amount} XP`;
+                xpElement.style.left = `${Math.random() * 80 + 10}%`;
+                document.body.appendChild(xpElement);
+                
+                setTimeout(() => {
+                    document.body.removeChild(xpElement);
+                }, 1500);
+            }
+            
+            // Update game stats
+            function updateStats() {
+                scoreValueElement.textContent = gameState.score;
+                xpValueElement.textContent = gameState.xp;
+                currentLevelElement.textContent = gameState.currentLevel;
+            }
+            
+            // Update progress bars
+            function updateProgressBars() {
+                // Calculate overall progress
+                const completed = gameState.completedLevels.size;
+                const totalLevels = gameState.maxLevel;
+                const progressPercent = Math.round((completed / totalLevels) * 100);
+                
+                mainProgress.style.width = `${progressPercent}%`;
+                progressPercentage.textContent = `${progressPercent}% Complete`;
+                
+                // Update module progress bars
+                const modules = ['basics', 'control', 'functions', 'data', 'pointers'];
+                modules.forEach(module => {
+                    const moduleQuestions = questions.filter(q => q.module === module);
+                    const moduleCompleted = moduleQuestions.filter(q => gameState.completedLevels.has(q.level)).length;
+                    const moduleProgress = moduleQuestions.length > 0 ? 
+                        Math.round((moduleCompleted / moduleQuestions.length) * 100) : 0;
+                    
+                    document.getElementById(`${module}-progress`).style.width = `${moduleProgress}%`;
+                });
+            }
+            
+            // Restart game
+            restartGameBtn.addEventListener('click', () => {
+                // Reset game state
+                gameState.currentLevel = 1;
+                gameState.score = 0;
+                gameState.xp = 0;
+                gameState.completedLevels.clear();
+                gameState.achievements = new Set(['First Steps', 'Quick Learner']);
+                
+                // Hide victory screen
+                victoryScreen.style.display = 'none';
+                
+                // Reinitialize game
+                initGame();
+            });
+            
+            // Module selection
+            document.querySelectorAll('.module').forEach(module => {
+                module.addEventListener('click', function() {
+                    document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const moduleId = this.dataset.module;
+                    gameState.currentModule = moduleId;
+                    
+                    // Update module title and description
+                    const moduleData = {
+                        basics: {
+                            title: "C Basics",
+                            desc: "Learn the fundamental building blocks of C programming including variables, data types, and basic operations."
+                        },
+                        control: {
+                            title: "Control Structures",
+                            desc: "Control structures determine the flow of your program. Learn how to make decisions and control the execution of your code with conditionals and loops."
+                        },
+                        functions: {
+                            title: "Functions",
+                            desc: "Functions allow you to encapsulate reusable pieces of code. Master function creation and usage to write cleaner programs."
+                        },
+                        data: {
+                            title: "Data Structures",
+                            desc: "Discover C's powerful data structures including arrays, structs, and unions for efficient data organization."
+                        },
+                        pointers: {
+                            title: "Pointers & Memory",
+                            desc: "Master pointers, memory management, and advanced C concepts that make the language powerful."
+                        }
+                    };
+                    
+                    moduleTitle.textContent = moduleData[moduleId].title;
+                    moduleDescription.textContent = moduleData[moduleId].desc;
+                    
+                    // Load the first uncompleted level in this module
+                    const moduleLevels = questions.filter(q => q.module === moduleId).map(q => q.level);
+                    const firstUncompleted = moduleLevels.find(level => !gameState.completedLevels.has(level)) || moduleLevels[0];
+                    loadLevel(firstUncompleted);
+                });
+            });
+            
+            // Initialize the game
+            initGame();
+        });
+    </script>
+</body>
+</html>
